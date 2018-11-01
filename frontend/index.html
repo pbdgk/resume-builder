@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=cyrillic" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.js"></script>
+
+
+    <title>Portfolio Builder</title>
+    </head>
+  <body>
+    <header>Header</header>
+    <aside id="sidebar"></aside>
+
+    <button id="myBtn">Open Modal</button>
+    <div id="uploadAvatarModal" class="modal">
+      <div class="modal-wrapper">
+        <div class="modal-header">
+          <h3>Crop Image</h3>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div class="modal-content">
+          <div class="wrapper">
+            <div class="crop-box"><img id="toCropImg" src="" alt=""></div>
+
+            <div class="preview-container">
+              <h4>Preview</h4>
+              <div class="preview-box"></div>
+              <div class="size-box">
+                <div class="">
+                  <span>Width</span>
+                  <span id="preview-width"></span>
+                  <span>px</span>
+                </div>
+                <div class="">
+                  <span>Height</span>
+                  <span id="preview-width"></span>
+                  <span>px</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-btn-wrapper">
+            <button class="btn-modal btn-save">Save</button>
+            <button class="btn-modal btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container" >
+      <main>
+
+        <section class="panel">
+          <div class="form">
+            <div class="field c6">
+              <label class="form-label">First name</label>
+              <input class="form-field" type="text">
+            </div>
+            <div class="field c6">
+              <label class="form-label">Last name</label>
+              <input class="form-field" type="text">
+            </div>
+            <div class="field c12">
+              <label class="form-label">Profession</label>
+              <input class="form-field" type="text">
+            </div>
+          </div>
+          <div class="avatar-wrapper">
+            <div class="avatar"></div>
+            <div class="overlay">
+              <div class="btn-photo" id="btn-upload-avatar">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Change Photo
+                <input type="file" name="avatar" onchange="previewImage(this)" id="inp-avatar" style="display:none">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="form" id='info2'>
+            <div class="form-heading c12">
+              <h4>Column 1</h4>
+              <span>Add field</span>
+            </div>
+            <div class="field c12">
+                <label class="form-label">Phone</label>
+                <input class="form-field" type="text">
+            </div>
+            <div class="field c12">
+                <label class="form-label">E-mail</label>
+                <input class="form-field" type="text">
+            </div>
+            <div class="field c12">
+                <label class="form-label">Date of birth</label>
+                <input class="form-field" type="text">
+            </div>
+          </div>
+
+
+          <div class="form" id='info3'>
+            <div class="form-heading c12">
+              <h4>Column 2</h4>
+              <span onclick="addField()">Add field</span>
+            </div>
+            <div class="field c12">
+                <label class="form-label">Facebook</label>
+                <input class="form-field" type="text">
+            </div>
+            <div class="field c12">
+                <label class="form-label">Linkedin</label>
+                <input class="form-field" type="text">
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
