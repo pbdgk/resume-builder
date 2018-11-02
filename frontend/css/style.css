@@ -164,7 +164,7 @@ body{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  padding: 15px 0;
+  padding: 5px 0 15px 0;
   align-content: flex-start;
   border-radius: 4px;
 }
@@ -202,7 +202,7 @@ body{
   background-color: #eff1f2;
   border:none;
   line-height: 20px;
-  padding: 11px 16px;
+  padding: 11px 16px 10px 16px;
   outline: none;
   width: 100%;
 }
