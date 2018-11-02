@@ -61,10 +61,9 @@ function previewImage( input ) {
 
 let cropper;
 let image = document.getElementById('toCropImg');
-// let preview = document.getElementById('previewBox');
 image.addEventListener('load', function (event){
   cropper = new Cropper(image, {
-    aspectRatio: 4 / 5,
+    aspectRatio: 1 / 1,
     checkCrossOrigin: false,
     preview: ".preview-box"
   });
