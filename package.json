@@ -9,10 +9,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "express": "^4.16.4",
     "gulp": "^3.9.1",
     "gulp-connect": "^5.6.1",
-    "nodemon": "^1.18.5"
+    "gulp-livereload": "^4.0.0"
   },
   "dependencies": {}
 }
