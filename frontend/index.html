@@ -62,15 +62,21 @@
           <div class="form">
             <div class="field c6">
               <label class="form-label">First name</label>
-              <input class="form-field" type="text">
+              <div class="new_form-field">
+                <input class="form-field" type="text">
+              </div>
             </div>
             <div class="field c6">
               <label class="form-label">Last name</label>
-              <input class="form-field" type="text">
+              <div class="new_form-field">
+                <input class="form-field" type="text">
+              </div>
             </div>
             <div class="field c12">
               <label class="form-label">Profession</label>
-              <input class="form-field" type="text">
+              <div class="new_form-field">
+                <input class="form-field" type="text">
+              </div>
             </div>
           </div>
           <div class="avatar-wrapper">
@@ -92,52 +98,83 @@
               <span>Add field</span>
             </div>
             <div class="field c12">
-                <label class="form-label">Phone</label>
-                <input class="form-field" type="text">
+              <label class="form-label">Phone</label>
+              <div class="ifield">
+                <span class="date-select-icon">
+                  <i class="fas fa-mobile-alt"></i>
+                </span>
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
+              </div>
             </div>
             <div class="field c12">
-                <label class="form-label">E-mail</label>
-                <input class="form-field" type="text">
+              <label class="form-label">E-mail</label>
+              <div class="ifield">
+                <span class="date-select-icon">
+                  <i class="far fa-envelope"></i>
+                </span>
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
+              </div>
             </div>
             <div class="field c12">
-                <label class="form-label">Date of birth</label>
-                <input class="form-field" type="text">
+              <label class="form-label">Date of birth</label>
+              <div class="ifield">
+                <span class="date-select-icon">
+                  <i class="fas fa-birthday-cake"></i>
+                </span>
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
+              </div>
             </div>
           </div>
 
 
           <div class="form" id='info3'>
+
             <div class="field form-heading c12">
               <h4>Column 2</h4>
               <span onclick="addField()">Add field</span>
             </div>
             <div class="field c12">
-
-                <label class="form-label">Facebook</label>
-                <div class="ifield">
-                  <span class="date-select-icon">
-                    <i class="far fa-calendar-alt"></i>
-                  </span>
+              <label class="form-label">Facebook</label>
+              <div class="ifield">
+                <span class="date-select-icon">
+                  <i class="fab fa-facebook-f"></i>
+                </span>
+                <div class="new_form-field">
                   <input class="form-field" type="text">
                 </div>
-
-
+              </div>
             </div>
+
             <div class="field c12">
-                <label class="form-label">Linkedin</label>
-                <input class="form-field" type="text">
+              <label class="form-label">Linkedin</label>
+              <div class="ifield">
+                <span class="date-select-icon">
+                  <i class="fab fa-linkedin-in"></i>
+                </span>
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
+              </div>
             </div>
+
           </div>
         </section>
 
-       <section class="panel">
+        <section class="panel">
           <div class="form">
             <div class="field form-heading c12">
               <h4>Summary</h4>
             </div>
             <div class="field c12">
-              <textarea class="form-field" name="summary" rows="5"></textarea>
-
+              <div class="new_form-field">
+                <textarea class="form-field" name="summary" rows="5"></textarea>
+              </div>
             </div>
           </div>
 
@@ -151,11 +188,15 @@
             </div>
             <div class="field c6">
                 <label class="form-label">Line 1 (e.g. position)</label>
-                <input class="form-field" type="text">
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
             </div>
             <div class="field c6">
                 <label class="form-label">Line 2 (e.g. company, department)</label>
-                <input class="form-field" type="text">
+                <div class="new_form-field">
+                  <input class="form-field" type="text">
+                </div>
             </div>
 
             <div class="field c6">
@@ -166,11 +207,11 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                    <select name="" id="">
-                      <option value="2018">2018</option>
-                      <option value="2019">2019</option>
-                    </select>
-                    <span class="select-arrow"></span>
+                      <select class="form-field" name="" id="">
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                      </select>
+                      <span class="select-arrow"></span>
                   </div>
                   <div class="dash">
                     <span></span>
@@ -185,6 +226,8 @@
                 </div>
               </div>
             </div>
+
+
             <div class="field c6">
               <label class="form-label">Date to (optional) </label>
               <div class="date-select-container">
@@ -215,7 +258,9 @@
 
             <div class="field c12">
               <label class="form-label">Experience</label>
-              <textarea class="form-field" name="experience" rows="5"></textarea>
+              <div class="new_form-field">
+                <textarea class="form-field" name="experience" rows="5"></textarea>
+              </div>
             </div>
           </div>
         </section>
