@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
-  connect = require('gulp-connect');
+  connect = require('gulp-connect'),
+  livereload = require('gulp-livereload');
+
 
 gulp.task('connect', function() {
   connect.server({
@@ -15,17 +17,15 @@ gulp.task('html', function () {
     .pipe(connect.reload());
 });
 
-
 gulp.task('css', function() {
-  gulp.src('.frontend/css/*.css')
-    .pipe(gulp.dest('./frontend'))
+  gulp.src('./frontend/css*.css')
+    .pipe(gulp.dest('./frontend/css/*.css'))
     .pipe(connect.reload());
-
 });
 
 
 gulp.task('watch', function () {
-  gulp.watch(['./frontend/*.html'], ['html', 'css']);
+  gulp.watch(['./frontend/**/*.html', './frontend/**/*.css'], ['html']);
 });
 
 gulp.task('default', ['connect', 'watch']);
