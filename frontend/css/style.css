@@ -16,6 +16,10 @@ body{
   line-height: 1.5;
 }
 
+
+/*  ===============  LAYOUT STYLES =================*/
+
+
 .c6 {
   flex-basis: 50%;
   max-width: 50%;
@@ -31,19 +35,22 @@ body{
   margin-left: 30%;
 }
 
+/*  =============== END layout styles =================*/
 
-/* MODAL AVATAR UPLOAD */
+
+
+/* ================ MODAL AVATAR UPLOAD ===============*/
 .modal {
     display: none;
-    position: fixed; /* Stay in place */
-    z-index: 999; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    position: fixed;
+    z-index: 999;
+    padding-top: 100px;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
+    overflow: auto;
+    background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.8);
     padding: 25px;
 }
@@ -149,6 +156,7 @@ body{
 .panel {
   display: flex;
   margin-top: 30px;
+  position: relative;
 }
 
 .panel .form {
@@ -161,8 +169,12 @@ body{
   border-radius: 4px;
 }
 
-.panel .form:first-child {
-  margin-right: 20px;
+.panel:first-child .form {
+  margin-right: 190px;
+}
+
+.panel:nth-child(2) .form:first-child {
+  margin-right: 30px;
 }
 
 .field {
@@ -197,10 +209,12 @@ body{
 
 
 .avatar-wrapper {
-  width: 191px;
+  width: 170px;
   background-color: #fff;
-  position: relative;
   border-radius: 4px;
+  position: absolute;
+  right: 0;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -242,7 +256,7 @@ body{
   text-align: center;
   transition: border-color .2s linear;
   background-color: rgba(0,0,0,0.5);
-  font-size: 1.4em;
+  font-size: 1.5em;
   line-height: 1.1em;
 }
 
