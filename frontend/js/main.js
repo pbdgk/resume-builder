@@ -68,3 +68,9 @@ image.addEventListener('load', function (event){
     preview: ".preview-box"
   });
 });
+
+
+
+
+
+// COLLECT FORM DATA

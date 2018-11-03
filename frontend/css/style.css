@@ -219,7 +219,7 @@ body{
 }
 
 .avatar {
-  background-image: url(../300x300.png);
+  background-image: url(../img/300x300.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
