@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    {% load static %}
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="{% static "app/css/normalize.css" %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=cyrillic" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{% static "app/css/style.css" %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.js"></script>
 
 
     <title>Portfolio Builder</title>
     </head>
   <body>
-
     <button id="myBtn">Open Modal</button>
+
+    <button id="REQUEST">REQUEST</button>
+
+
+
     <div id="uploadAvatarModal" class="modal">
       <div class="modal-wrapper">
         <div class="modal-header">
@@ -76,6 +81,7 @@
               </div>
             </div>
           </div>
+
           <div class="avatar-wrapper">
             <div class="avatar"></div>
             <div class="overlay">
@@ -214,7 +220,7 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select name="" id="">
+                    <select class="form-field" name="" id="">
                       <option value="06 - Jun">06 - Jun</option>
                       <option value="07 - Jul">07 - Jul</option>
                     </select>
@@ -233,7 +239,7 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                    <select name="" id="">
+                    <select class="form-field" name="" id="">
                       <option value="2018">2018</option>
                       <option value="2019">2019</option>
                     </select>
@@ -243,7 +249,7 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select name="" id="">
+                    <select class="form-field" name="" id="">
                       <option value="06 - Jun">06 - Jun</option>
                       <option value="07 - Jul">07 - Jul</option>
                     </select>
@@ -267,6 +273,7 @@
 
       </main>
     </div>
-    <script src="js/main.js"></script>
+    <script src="{% static "app/js/main.js" %}"></script>
+    <script src="{% static "app/js/ajaxRequests.js" %}"></script>
   </body>
 </html>
