@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Register</title>
+</head>
+<body>
+  <form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+    {% if form.errors %}
+    {{ form.errors}}
+    <p>There are errors in form</p>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    <button type='submit'>Register</button>
+  </form>
+</body>
+</html>

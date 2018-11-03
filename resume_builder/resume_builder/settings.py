@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'auth_app',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +53,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'resume_builder.urls'
 
+BASE_TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates').replace('\\','/')
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_TEMPLATE_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
