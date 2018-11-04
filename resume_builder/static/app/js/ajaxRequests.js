@@ -63,21 +63,17 @@ function setEventListenerOnChange(target) {
 
 function updateResume(model, target){
   let data = {[target.name]: target.value}
-  $.ajax(
-    {
+  $.ajax({
       method: "PUT",
       url: `http://127.0.0.1:8000/api/v1/${model}/`,
-      data: data
+      data: data,
+      success: function(msg) {
+        console.log("SUCCESS", msg)
+      },
+      error: function(msg) {
+        console.log("ERROR", msg)
+      }
    })
-   .success(function (msg) {
-     console.log("SUCCESS", msg)
-   })
-   .fail(function(msg){
-     console.log("FAIL", msg)
-   })
-   .done(function(msg) {
-    console.log(msg)
-  });
 }
 
 
