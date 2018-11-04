@@ -62,23 +62,23 @@
     <div class="container">
       <main>
         <section class="panel">
-          <div class="form" data-n="main">
+          <div class="form" data-n="profile">
             <div class="field c6">
               <label class="form-label">First name</label>
               <div class="new_form-field">
-                <input class="form-field" type="text" name="firstName">
+                <input class="form-field" type="text" data-listener="keyup" name="first_name">
               </div>
             </div>
             <div class="field c6">
               <label class="form-label">Last name</label>
               <div class="new_form-field">
-                <input class="form-field" type="text" name="lastName">
+                <input class="form-field" type="text" data-listener="keyup" name="last_name">
               </div>
             </div>
             <div class="field c12">
               <label class="form-label">Profession</label>
               <div class="new_form-field">
-                <input class="form-field" type="text" name="proffesion">
+                <input class="form-field" type="text" data-listener="keyup" name="profession">
               </div>
             </div>
           </div>
@@ -185,21 +185,21 @@
 
         </section>
 
-        <section class="panel">
-          <div class="form" data-n="job1">
+        <section class="panel" data-num="0">
+          <div class="form" data-n="jobs">
             <div class="field form-heading c12">
               <h4>Company #1</h4>
             </div>
             <div class="field c6">
                 <label class="form-label">Line 1 (e.g. position)</label>
                 <div class="new_form-field">
-                  <input class="form-field" type="text" name="position">
+                  <input class="form-field" type="text" data-listener="keyup" name="position0">
                 </div>
             </div>
             <div class="field c6">
                 <label class="form-label">Line 2 (e.g. company, department)</label>
                 <div class="new_form-field">
-                  <input class="form-field" type="text" name="company">
+                  <input class="form-field" type="text" data-listener="keyup" name="company0">
                 </div>
             </div>
 
@@ -211,7 +211,8 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                      <select class="form-field" name="dateFromYear">
+                      <select class="form-field" data-listener="change" name="dateFromYear0">
+                        <option value="YYYY">YYYY</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>
                       </select>
@@ -221,7 +222,8 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select class="form-field" name="dateFromMonth">
+                    <select class="form-field" data-listener="change" name="dateFromMonth0">
+                      <option value="MM">MM</option>
                       <option value="6">06 - Jun</option>
                       <option value="7">07 - Jul</option>
                     </select>
@@ -240,7 +242,7 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                    <select class="form-field" name="dateToYear">
+                    <select class="form-field" data-listener="change" name="dateToYear0">
                       <option value="2018">2018</option>
                       <option value="2019">2019</option>
                     </select>
@@ -250,7 +252,7 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select class="form-field" name="dateToMonth">
+                    <select class="form-field" data-listener="change" name="dateToMonth0">
                       <option value="06 - Jun">06 - Jun</option>
                       <option value="07 - Jul">07 - Jul</option>
                     </select>
@@ -263,7 +265,7 @@
             <div class="field c12">
               <label class="form-label">Experience</label>
               <div class="new_form-field">
-                <textarea class="form-field" name="experience" rows="5"></textarea>
+                <textarea class="form-field" data-listener="keyup" name="experience0" rows="5"></textarea>
               </div>
             </div>
           </div>
@@ -274,7 +276,7 @@
 
       </main>
     </div>
-    <script src="{% static "app/js/main.js" %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>    <script src="{% static "app/js/main.js" %}"></script>
     <script src="{% static "app/js/ajaxRequests.js" %}"></script>
   </body>
 </html>
