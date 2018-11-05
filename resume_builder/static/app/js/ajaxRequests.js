@@ -31,11 +31,9 @@ $.ajaxSetup({
     }
 });
 
-
 function getAllInputs(cssSelector) {
   return document.querySelectorAll(cssSelector)
 }
-
 
 function getContainerName(target){
   let container = target.closest('.form');
@@ -55,52 +53,80 @@ function checkMany(target){
 }
 
 
-function setEventListenerOnChange(target, fn, event) {
-  let model, many, typingTimer;
-  model = getContainerName(target);
-  many = checkMany(target);
-  target.addEventListener(event, function() {
+function listen(target, fn, event, argumentsToApply){
+  let typingTimer;
+  target.addEventListener(event, function(){
     clearTimeout(typingTimer);
     typingTimer = setTimeout(function(){
-      fn(model, target, many)
+      fn.apply(null, argumentsToApply);
     }, doneTypingInterval)
   });
+
 }
 
-function updateField(model, target, many){
-  let name = target.name.slice(0, -1)
+function onDateChange(target, fn, event){
+  let model, prefix, selects;
+  model = getContainerName(target);
+  prefix = target.dataset && target.dataset.prefix
+  if (!prefix) {
+    throw new Error
+  }
+  selects = target.getElementsByTagName('select')
+  for (var i=0; i<selects.length; i++){
+    listen(selects[i], fn, event, [model, target, selects]);
+  }
+}
+
+function onFieldChange(target, fn, event) {
+  let model, many;
+  model = getContainerName(target);
+  listen(target, fn, event, [model, target])
+}
+
+function updateDate(model, target, selects){
+  let many = checkMany(target);
+  let url = `http://127.0.0.1:8000/api/v1/${model}/`;
+  url = many ? url + `${many}/` : url
+  console.log(url)
+  let data, date, prefix;
+  prefix = target.dataset.prefix;
+  date = {
+    [selects[0].dataset.datePart]: selects[0].value,
+    [selects[1].dataset.datePart]: selects[1].value,
+  };
+  date = new Date(date.year, date.month)
+  data = {[prefix]: date}
+  $.ajax({
+    method: "PUT",
+    url: url,
+    data: data,
+    success: function(msg) {
+      console.log("SUCCESS", msg)
+    },
+    error: function(msg) {
+      console.log("ERROR", msg)
+    }
+  })
+}
+
+function updateField(model, target){
+  let many = checkMany(target);
+  let name = many ? target.name.slice(0, -1) : target.name
   let data = {[name]: target.value}
-  console.log(data)
   let url = `http://127.0.0.1:8000/api/v1/${model}/`
   url = many ? url + `${many}/` : url
-    $.ajax({
-      method: "PUT",
-      url: url,
-      data: data,
-      success: function(msg) {
-        console.log("SUCCESS", msg)
-      },
-      error: function(msg) {
-        console.log("ERROR", msg)
-      }
-    })
+  $.ajax({
+    method: "PUT",
+    url: url,
+    data: data,
+    success: function(msg) {
+      console.log("SUCCESS", msg)
+    },
+    error: function(msg) {
+      console.log("ERROR", msg)
+    }
+  })
 }
-
-
-// function updateResume(model, target){
-//   let data = {[target.name]: target.value}
-//   $.ajax({
-//       method: "PUT",
-//       url: `http://127.0.0.1:8000/api/v1/${model}/`,
-//       data: data,
-//       success: function(msg) {
-//         console.log("SUCCESS", msg)
-//       },
-//       error: function(msg) {
-//         console.log("ERROR", msg)
-//       }
-//    })
-// }
 
 
 function getProfileData(){
@@ -117,47 +143,12 @@ function getProfileData(){
           let inp = document.querySelector(`[name="${key}"]`)
           inp.value = value;
         }
-
       },
       error: function(msg) {
         console.log("ERROR", msg)
       }
    })
 }
-
-getProfileData()
-
-
-const profileInputs = getAllInputs('.form-field')
-let event;
-for (var i=0; i < profileInputs.length; i++){
-  let input = profileInputs[i]
-  event = input.dataset && input.dataset.listener
-  if (event) {
-    setEventListenerOnChange(profileInputs[i], updateField, event)
-  }
-}
-
-// const jobInputs = getAllInputs('.job .form-field')
-// for (var i=0; i < jobInputs.length; i++){
-//   setEventListenerOnChange(jobInputs[i], updateJob)
-// }
-
-// function updateJob(model, target){
-//   let data = {[target.name]: target.value}
-//   console.log(model, target)
-  // $.ajax({
-  //     method: "PUT",
-  //     url: `http://127.0.0.1:8000/api/v1/${model}/`,
-  //     data: data,
-  //     success: function(msg) {
-  //       console.log("SUCCESS", msg)
-  //     },
-  //     error: function(msg) {
-  //       console.log("ERROR", msg)
-  //     }
-   // })
-// }
 
 function getJobData(){
   $.ajax({
@@ -181,4 +172,20 @@ function getJobData(){
    })
 }
 
+getProfileData()
+
 // getJobData()
+
+
+const profileInputs = getAllInputs('[data-listener]')
+let event;
+for (var i=0; i < profileInputs.length; i++){
+  let target = profileInputs[i]
+  event = target.dataset && target.dataset.listener
+  if (event === "changeDate") {
+    onDateChange(target, updateDate, "change");
+  }
+  else if (event) {
+    onFieldChange(target, updateField, event);
+  }
+}
