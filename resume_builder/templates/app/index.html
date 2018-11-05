@@ -61,6 +61,7 @@
 
     <div class="container">
       <main>
+
         <section class="panel">
           <div class="form" data-n="profile">
             <div class="field c6">
@@ -203,7 +204,7 @@
                 </div>
             </div>
 
-            <div class="field c6">
+            <div class="field c6" data-listener="changeDate" data-prefix="start">
               <label class="form-label">Date from</label>
               <div class="date-select-container">
                 <span class="date-select-icon">
@@ -211,7 +212,7 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                      <select class="form-field" data-listener="change" name="dateFromYear0">
+                      <select class="form-field" data-date-part="year" name="dateFromYear0">
                         <option value="YYYY">YYYY</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>
@@ -222,7 +223,7 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select class="form-field" data-listener="change" name="dateFromMonth0">
+                    <select class="form-field" data-date-part="month" name="dateFromMonth0">
                       <option value="MM">MM</option>
                       <option value="6">06 - Jun</option>
                       <option value="7">07 - Jul</option>
@@ -234,7 +235,7 @@
             </div>
 
 
-            <div class="field c6">
+            <div class="field c6" data-listener="changeDate" data-prefix="end">
               <label class="form-label">Date to (optional) </label>
               <div class="date-select-container">
                 <span class="date-select-icon">
@@ -242,7 +243,7 @@
                 </span>
                 <div class="date-select-box">
                   <div class="date-select-wrapper">
-                    <select class="form-field" data-listener="change" name="dateToYear0">
+                    <select class="form-field" data-date-part="year" name="dateToYear0">
                       <option value="2018">2018</option>
                       <option value="2019">2019</option>
                     </select>
@@ -252,9 +253,9 @@
                     <span></span>
                   </div>
                   <div class="date-select-wrapper">
-                    <select class="form-field" data-listener="change" name="dateToMonth0">
-                      <option value="06 - Jun">06 - Jun</option>
-                      <option value="07 - Jul">07 - Jul</option>
+                    <select class="form-field" data-date-part="month" name="dateToMonth0">
+                      <option value="06">06 - Jun</option>
+                      <option value="07">07 - Jul</option>
                     </select>
                     <span class="select-arrow"></span>
                   </div>
