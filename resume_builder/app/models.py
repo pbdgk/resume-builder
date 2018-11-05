@@ -14,19 +14,18 @@ from django.db.models.signals import post_save
 #     profile =
 
 class Profile(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     profession = models.CharField(max_length=255, blank=True)
 
-    # presonal_data = models.ForeignKey("PersonalData", on_delete=models.CASCADE)
-
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def build_profile_on_user_creation(sender, instance, created, **kwargs):
-  if created:
-    profile = Profile(user=instance)
-    profile.save()
+    if created:
+        Profile.objects.get_or_create(user=instance)
+
+
 
 
 # class PersonalData(models.Model):
@@ -43,14 +42,41 @@ def build_profile_on_user_creation(sender, instance, created, **kwargs):
 #     link = models.URLField(max_length=255, blank=True, default="")
 #
 #
+
+
+
+
 class Job(models.Model):
-    user = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     position = models.CharField(max_length=255, blank=True, default="")
     company = models.CharField(max_length=255, blank=True, default="")
-    start_time = models.DateField(blank=True, null=True)
-    end_time = models.DateField(blank=True, null=True)
+    start = models.DateField(blank=True, null=True)
+    end = models.DateField(blank=True, null=True)
     experience = models.TextField(blank=True, default="")
-#
+    priority = models.IntegerField(blank=True)
+
+
+    def save(self, *args, **kwargs):
+        if self.priority is None:
+            print(self.user)
+            jobs = Job.objects.filter(user=self.user)
+            if not jobs.exists():
+                self.priority = 1
+            else:
+                self.priority = jobs.count() + 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        priority = self.priority
+        user = self.user
+        super().delete(*args, **kwargs)
+        jobs = Job.objects.filter(user=user)
+        for job in jobs:
+            if job.priority > priority:
+                job.priority = job.priority - 1
+                job.save()
+
+
 # class Languange(models.Model):
 #     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
 #     name = models.CharField(max_length=255)
