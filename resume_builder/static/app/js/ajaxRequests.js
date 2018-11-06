@@ -31,7 +31,6 @@ $.ajaxSetup({
     }
 });
 
-
 function getContainerName(target){
   let container = target.closest('.panel');
   if (container.dataset && container.dataset.n){
@@ -48,7 +47,6 @@ function checkMany(target){
   return container.dataset && container.dataset.num;
 
 }
-
 
 function listen(target, fn, event, argumentsToApply){
   let typingTimer;
@@ -133,7 +131,6 @@ function updateField(model, target){
   })
 }
 
-
 function getProfileData(){
   $.ajax({
       method: "GET",
@@ -154,23 +151,41 @@ function getProfileData(){
    })
 }
 
-function addCompany(){
+function addSection(type){
   $.ajax({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/v1/jobs/`,
+      url: `http://127.0.0.1:8000/api/v1/${type}/`,
       success: function(msg) {
         console.log("SUCCESS", msg)
-        getData("jobs")
+        getData(type)
       },
       error: function(msg) {console.log("ERROR", msg)}
    });
 };
 
+function deleteSection(target, type){
+  let container = target.closest('.panel');
+  let priority = container.dataset && container.dataset.num
+  $.ajax({
+      method: "DELETE",
+      url: `http://127.0.0.1:8000/api/v1/${type}/`,
+      data: {"priority": priority},
+      success: function(data) {
+        console.log("SUCCESS", data)
+        getData(type)
+      },
+      error: function(msg) {console.log("ERROR", msg)}
+   })
+}
 
-var addCompanyBtn = document.getElementById("addCompany")
-addCompanyBtn.addEventListener('click', e => {
-    addCompany();
+var addJobBtn = document.getElementById("addJob")
+addJobBtn.addEventListener('click', e => {
+    addSection("jobs");
 })
 
+var addSchoolBtn = document.getElementById("addSchool")
+addSchoolBtn.addEventListener('click', e => {
+    addSection("schools");
+})
 
 // getProfileData()

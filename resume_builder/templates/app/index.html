@@ -20,7 +20,8 @@
     </noscript>
     <!-- BUTTONS FOR TEST PUSPOSES -->
     <button id="myBtn">Open Modal</button>
-    <button id="REQUEST">REQUEST</button>
+    <button id="jobsReq">Job</button>
+    <button id="schoolsReq">School</button>
     <!-- ========================== -->
 
 
@@ -44,7 +45,7 @@
                 </div>
                 <div class="size-box">
                   <span>Height</span>
-                  <span id="preview-width">860</span>
+                  <span id="preview-height">860</span>
                   <span>px</span>
                 </div>
               </div>
@@ -196,140 +197,47 @@
       <div class="container">
         <div id="jobsTarget">Loading...</div>
         <div class="add-new-possition">
-          <button id='addCompany'>Add new company</button>
-
+          <button id="addJob">Add new company</button>
         </div>
-        <script>
-
-        function render(sectionData, containerName){
-          // some stupid things begin here
-          // because django template system does not allow to use
-          // js string interpolation inside itself instruction static ...
-          // so was found way to add add container name as template name after
-          // django generates url
-          // mb will find better way later
-          let url = "{% static 'app/js/.mst' %}"
-          let temp = url.split(".")
-          url = temp.join(containerName + '.')
-          // TODO replace with js
-          $.get(url, function(template){
-            var rendered = Mustache.render(template, {[containerName]: sectionData});
-            $(`#${containerName}Target`).html(rendered);
-
-
-            let currentYear = new Date().getFullYear()
-            let container = document.getElementById(`${containerName}Target`)
-            let selects = container.querySelectorAll("select[data-date-part=year]")
-            for (var i=0; i < selects.length; i++){
-              generateYearOptions(selects[i], currentYear, 50);
-            }
-            let containers = document.querySelectorAll(`[data-n=${containerName}]`)
-            setDates(sectionData, 'select', containers);
-            registerListener(containers)
-          });
-        };
-
-        </script>
       </div>
 
       <div class="container">
-        <section class="panel" data-n="schools" data-num="{{priority}}">
-          <div class="form">
-            <div class="field form-heading c12">
-              <h4>School #{{priority}}</h4>
-              <span><i onclick="deleteJob(this)" class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-            <div class="field c12">
-                <label class="form-label">School name, major, minor, degree</label>
-                <div class="new_form-field">
-                  <input class="form-field" type="text" data-listener="keyup" name="position0" value="{{position}}">
-                </div>
-            </div>
-
-            <div class="field c6" data-listener="changeDate" data-prefix="start">
-              <label class="form-label">Date from</label>
-              <div class="date-select-container">
-                <span class="date-select-icon">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-                <div class="date-select-box">
-                  <div class="date-select-wrapper">
-                      <select class="form-field" data-date-part="year" name="dateFromYear0">
-                        <option selected="selected" value="YYYY">YYYY</option>
-                      </select>
-                      <span class="select-arrow"></span>
-                  </div>
-                  <div class="dash">
-                    <span></span>
-                  </div>
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="month" name="dateFromMonth0">
-                      <option value="MM" selected>MM</option>
-                      <option value="0">01 - Jan</option>
-                      <option value="1">02 - Fab</option>
-                      <option value="3">04 - Mar</option>
-                      <option value="4">05 - Apr</option>
-                      <option value="5">06 - May</option>
-                      <option value="6">07 - Jun</option>
-                      <option value="7">08 - Jul</option>
-                      <option value="8">09 - Aug</option>
-                      <option value="9">10 - Sep</option>
-                      <option value="10">11 - Oct</option>
-                      <option value="11">12 - Nov</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="field c6" data-listener="changeDate" data-prefix="end">
-              <label class="form-label">Date to (optional) </label>
-              <div class="date-select-container">
-                <span class="date-select-icon">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-                <div class="date-select-box">
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="year">
-                        <option selected="selected" value="YYYY">YYYY</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                  <div class="dash">
-                    <span></span>
-                  </div>
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="month">
-                      <option value="MM" selected>MM</option>
-                      <option value="0">01 - Jan</option>
-                      <option value="1">02 - Fab</option>
-                      <option value="3">04 - Mar</option>
-                      <option value="4">05 - Apr</option>
-                      <option value="5">06 - May</option>
-                      <option value="6">07 - Jun</option>
-                      <option value="7">08 - Jul</option>
-                      <option value="8">09 - Aug</option>
-                      <option value="9">10 - Sep</option>
-                      <option value="10">11 - Oct</option>
-                      <option value="11">12 - Nov</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="field c12">
-              <label class="form-label">Description</label>
-              <div class="new_form-field">
-                <textarea class="form-field" data-listener="keyup" name="description0" rows="5">{{description}}</textarea>
-              </div>
-            </div>
-          </div>
-        </section>
+        <div id="schoolsTarget">Loading...</div>
+        <div class="add-new-possition">
+          <button id="addSchool">Add new school</button>
+        </div>
       </div>
+
+      <script>
+      function render(sectionData, containerName){
+        // some stupid things begin here
+        // because django template system does not allow to use
+        // js string interpolation inside itself instruction static ...
+        // so was found way to add add container name as template name after
+        // django generates url
+        // mb will find better way later
+        let url = "{% static 'app/js/.mst' %}"
+        let temp = url.split(".")
+        url = temp.join(containerName + '.')
+        // TODO replace with js
+        $.get(url, function(template){
+          var rendered = Mustache.render(template, {[containerName]: sectionData});
+          $(`#${containerName}Target`).html(rendered);
+
+
+          let currentYear = new Date().getFullYear()
+          let container = document.getElementById(`${containerName}Target`)
+          let selects = container.querySelectorAll("select[data-date-part=year]")
+          for (var i=0; i < selects.length; i++){
+            generateYearOptions(selects[i], currentYear, 50);
+          }
+          let containers = document.querySelectorAll(`[data-n=${containerName}]`)
+          setDates(sectionData, 'select', containers);
+          registerListener(containers)
+        });
+      };
+      </script>
+
     </main>
     <script src="{% static "app/js/ajaxRequests.js" %}"></script>
     <script src="{% static "app/js/main.js" %}"></script>

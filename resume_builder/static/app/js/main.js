@@ -20,7 +20,6 @@ function addField() {
   panel.appendChild(field)
 }
 
-
 var btn = document.getElementById("btn-upload-avatar");
 btn.addEventListener("click", uploadAvatar);
 
@@ -29,8 +28,6 @@ function uploadAvatar(){
   let btn = document.getElementById("inp-avatar");
   btn.click();
 }
-
-
 
 var modal = document.getElementById("uploadAvatarModal");
 var btn = document.getElementById("myBtn");
@@ -71,9 +68,14 @@ image.addEventListener('load', function (event){
 });
 
 
-var btn = document.getElementById("REQUEST");
+var btn = document.getElementById("jobsReq");
 btn.addEventListener('click', () => {
   getData("jobs")
+})
+
+var btn = document.getElementById("schoolsReq");
+btn.addEventListener('click', () => {
+  getData("schools")
 })
 
 function getAllInputs(element, cssSelector) {
@@ -98,67 +100,62 @@ function registerListener(containers){
   }
 }
 
-
-
-
-
 function getData(dataName){
-          $.ajax({
-              method: "GET",
-              url: `http://127.0.0.1:8000/api/v1/${dataName}/`,
-              success: function(data) {
-                console.log("SUCCESS", data)
-                render(data, dataName)
-              },
-              error: function(msg) {
-                console.log("ERROR", msg)
-              }
-           })
-        }
+  $.ajax({
+      method: "GET",
+      url: `http://127.0.0.1:8000/api/v1/${dataName}/`,
+      success: function(data) {
+        console.log("SUCCESS", data)
+        render(data, dataName)
+      },
+      error: function(msg) {
+        console.log("ERROR", msg)
+      }
+   })
+}
 
-        function generateYearOptions(select, endYear, range){
-          for (var i = 0; i <= range; i++){
-              var opt = document.createElement('option');
-              opt.value = endYear - i ;
-              opt.innerHTML = endYear - i;
-              select.appendChild(opt);
-          }
-        }
+function generateYearOptions(select, endYear, range){
+  for (var i = 0; i <= range; i++){
+      var opt = document.createElement('option');
+      opt.value = endYear - i ;
+      opt.innerHTML = endYear - i;
+      select.appendChild(opt);
+  }
+}
 
-        function chooseSelect(select, value){
-          let opts = select.options;
-          for (var i = 0; i < opts.length; i++) {
-            if (opts[i].value == value){
-              opts.selectedIndex = i;
-              break;
-            }
-          }
-        }
+function chooseSelect(select, value){
+  let opts = select.options;
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].value == value){
+      opts.selectedIndex = i;
+      break;
+    }
+  }
+}
 
-        function setYearAndMonth(container, selector, part){
-            let selects, dateSelects, yearOrMonth;
-            selects = container.querySelectorAll(selector);
-            dateSelects = {"year": selects[0], "month": selects[1]}
-            for (yearOrMonth in dateSelects){
-              chooseSelect(dateSelects[yearOrMonth], part[yearOrMonth])
-            }
-        }
+function setYearAndMonth(container, selector, part){
+    let selects, dateSelects, yearOrMonth;
+    selects = container.querySelectorAll(selector);
+    dateSelects = {"year": selects[0], "month": selects[1]}
+    for (yearOrMonth in dateSelects){
+      chooseSelect(dateSelects[yearOrMonth], part[yearOrMonth])
+    }
+}
 
-        function parseDate(date){
-          let year, month, d;
-          if (date){
-            d = new Date(date)
-            year = d.getFullYear()
-            month = d.getMonth()
-          } else {
-            year = "YYYY"
-            month = 'MM'
-          }
-          return {"year": year, "month": month}
-        }
+function parseDate(date){
+  let year, month, d;
+  if (date){
+    d = new Date(date)
+    year = d.getFullYear()
+    month = d.getMonth()
+  } else {
+    year = "YYYY"
+    month = 'MM'
+  }
+  return {"year": year, "month": month}
+}
 
-
-        function setDates(jobs, selector, containers){
+function setDates(jobs, selector, containers){
           for (var i=0; i < containers.length; i++){
             let dateContainer, part, block = containers[i], job = jobs[i];
             let dateObj = {"start": parseDate(job.start), "end": parseDate(job.end)}
@@ -167,25 +164,4 @@ function getData(dataName){
               setYearAndMonth(dateContainer, selector, dateObj[part])
             }
           }
-
         }
-
-function deleteJob(target){
-  let container = target.closest('.panel');
-  console.log(container)
-  let priority = container.dataset && container.dataset.num
-  $.ajax({
-      method: "DELETE",
-      url: 'http://127.0.0.1:8000/api/v1/jobs/',
-      data: {"priority": priority},
-      success: function(data) {
-        console.log("SUCCESS", data)
-        getData("jobs")
-      },
-      error: function(msg) {
-        console.log("ERROR", msg)
-      }
-   })
-}
-
-// COLLECT FORM DATA
