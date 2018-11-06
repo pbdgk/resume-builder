@@ -2,15 +2,17 @@ from rest_framework import serializers
 
 from .models import Profile, Job
 
+
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('first_name', 'last_name', 'profession')
 
 class JobSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Job
-        fields = ('position', 'company', 'start_time', 'end_time', 'experience',)
+        fields = ('position', 'company', 'start', 'end', 'experience', 'priority')
 
 
 # class PersonalDataSerializer(serializers.ModelSerializer):
