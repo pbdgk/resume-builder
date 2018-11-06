@@ -80,15 +80,17 @@ function onFieldChange(target, fn, event) {
 }
 
 function updateDate(model, target, selects){
-  let many = checkMany(target);
-  let url = `http://127.0.0.1:8000/api/v1/${model}/`;
-  let data, date, prefix;
+  let data, date, prefix, many, url;
+  many = checkMany(target);
+  url = `http://127.0.0.1:8000/api/v1/${model}/`;
   prefix = target.dataset.prefix;
   date = {
     [selects[0].dataset.datePart]: selects[0].value,
     [selects[1].dataset.datePart]: selects[1].value,
   };
   date = new Date(date.year, date.month);
+  // Not the best way, but seems that js don't have strftime method.
+  // It's better than include one of date libraries.
   let datestring = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
   if (many){
     data = {[prefix]: datestring, 'priority': many}
@@ -110,13 +112,12 @@ function updateDate(model, target, selects){
 
 function updateField(model, target){
   // no model here
-  let many = checkMany(target);
-  let name = many ? target.name.slice(0, -1) : target.name
-  let data;
+  let data, many;
+  many = checkMany(target);
   if (many){
-    data = {[name]: target.value, 'priority': many}
+    data = {[target.name]: target.value, 'priority': many}
   } else {
-    data = {[name]: target.value}
+    data = {[target.name]: target.value}
   }
   let url = `http://127.0.0.1:8000/api/v1/${model}/`
   $.ajax({
@@ -159,7 +160,7 @@ function addCompany(){
       url: `http://127.0.0.1:8000/api/v1/jobs/`,
       success: function(msg) {
         console.log("SUCCESS", msg)
-        getJobData()
+        getData("jobs")
       },
       error: function(msg) {console.log("ERROR", msg)}
    });

@@ -8,13 +8,13 @@
     <div class="field c6">
         <label class="form-label">Line 1 (e.g. position)</label>
         <div class="new_form-field">
-          <input class="form-field" type="text" data-listener="keyup" name="position0" value="{{position}}">
+          <input class="form-field" type="text" data-listener="keyup" name="position" value="{{position}}">
         </div>
     </div>
     <div class="field c6">
         <label class="form-label">Line 2 (e.g. company, department)</label>
         <div class="new_form-field">
-          <input class="form-field" type="text" data-listener="keyup" name="company0" value="{{company}}">
+          <input class="form-field" type="text" data-listener="keyup" name="company" value="{{company}}">
         </div>
     </div>
 
@@ -26,7 +26,7 @@
         </span>
         <div class="date-select-box">
           <div class="date-select-wrapper">
-              <select class="form-field" data-date-part="year" name="dateFromYear0">
+              <select class="form-field" data-date-part="year">
                 <option selected="selected" value="YYYY">YYYY</option>
               </select>
               <span class="select-arrow"></span>
@@ -35,7 +35,7 @@
             <span></span>
           </div>
           <div class="date-select-wrapper">
-            <select class="form-field" data-date-part="month" name="dateFromMonth0">
+            <select class="form-field" data-date-part="month">
               <option value="MM" selected>MM</option>
               <option value="0">01 - Jan</option>
               <option value="1">02 - Fab</option>
@@ -96,7 +96,7 @@
     <div class="field c12">
       <label class="form-label">Experience</label>
       <div class="new_form-field">
-        <textarea class="form-field" data-listener="keyup" name="experience0" rows="5">{{experience}}</textarea>
+        <textarea class="form-field" data-listener="keyup" name="experience" rows="5">{{experience}}</textarea>
       </div>
     </div>
   </div>

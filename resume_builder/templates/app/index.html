@@ -194,7 +194,7 @@
       </div>
 
       <div class="container">
-        <div id="target">Loading...</div>
+        <div id="jobsTarget">Loading...</div>
         <div class="add-new-possition">
           <button id='addCompany'>Add new company</button>
 
@@ -211,15 +211,14 @@
           let url = "{% static 'app/js/.mst' %}"
           let temp = url.split(".")
           url = temp.join(containerName + '.')
-          console.log(url)
           // TODO replace with js
           $.get(url, function(template){
             var rendered = Mustache.render(template, {[containerName]: sectionData});
-            $('#target').html(rendered);
+            $(`#${containerName}Target`).html(rendered);
 
 
             let currentYear = new Date().getFullYear()
-            let container = document.getElementById("target")
+            let container = document.getElementById(`${containerName}Target`)
             let selects = container.querySelectorAll("select[data-date-part=year]")
             for (var i=0; i < selects.length; i++){
               generateYearOptions(selects[i], currentYear, 50);
