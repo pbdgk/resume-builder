@@ -8,13 +8,16 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css">
     <link rel="stylesheet" href="{% static "app/css/style.css" %}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.min.js"></script>
 
     <title>Portfolio Builder</title>
     </head>
   <body>
-
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
     <!-- BUTTONS FOR TEST PUSPOSES -->
     <button id="myBtn">Open Modal</button>
     <button id="REQUEST">REQUEST</button>
@@ -59,9 +62,8 @@
     </div>
 
 
-    <div class="container">
-      <main>
-
+    <main>
+      <div class="container" style="display: none">
         <section class="panel">
           <div class="form" data-n="profile">
             <div class="field c6">
@@ -95,7 +97,9 @@
             </div>
           </div>
         </section>
+      </div>
 
+      <div class="container" style="display: none">
         <section class="panel">
           <div class="form" data-n="personal">
             <div class="field form-heading c12">
@@ -170,7 +174,9 @@
 
           </div>
         </section>
+      </div>
 
+      <div class="container" style="display: none">
         <section class="panel">
           <div class="form" data-n="summary">
             <div class="field form-heading c12">
@@ -185,99 +191,41 @@
 
 
         </section>
-
-        <section class="panel" data-num="0">
-          <div class="form" data-n="jobs">
-            <div class="field form-heading c12">
-              <h4>Company #1</h4>
-            </div>
-            <div class="field c6">
-                <label class="form-label">Line 1 (e.g. position)</label>
-                <div class="new_form-field">
-                  <input class="form-field" type="text" data-listener="keyup" name="position0">
-                </div>
-            </div>
-            <div class="field c6">
-                <label class="form-label">Line 2 (e.g. company, department)</label>
-                <div class="new_form-field">
-                  <input class="form-field" type="text" data-listener="keyup" name="company0">
-                </div>
-            </div>
-
-            <div class="field c6" data-listener="changeDate" data-prefix="start">
-              <label class="form-label">Date from</label>
-              <div class="date-select-container">
-                <span class="date-select-icon">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-                <div class="date-select-box">
-                  <div class="date-select-wrapper">
-                      <select class="form-field" data-date-part="year" name="dateFromYear0">
-                        <option value="YYYY">YYYY</option>
-                        <option value="2018">2018</option>
-                        <option value="2019">2019</option>
-                      </select>
-                      <span class="select-arrow"></span>
-                  </div>
-                  <div class="dash">
-                    <span></span>
-                  </div>
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="month" name="dateFromMonth0">
-                      <option value="MM">MM</option>
-                      <option value="6">06 - Jun</option>
-                      <option value="7">07 - Jul</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      </div>
 
 
-            <div class="field c6" data-listener="changeDate" data-prefix="end">
-              <label class="form-label">Date to (optional) </label>
-              <div class="date-select-container">
-                <span class="date-select-icon">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-                <div class="date-select-box">
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="year" name="dateToYear0">
-                      <option value="2018">2018</option>
-                      <option value="2019">2019</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                  <div class="dash">
-                    <span></span>
-                  </div>
-                  <div class="date-select-wrapper">
-                    <select class="form-field" data-date-part="month" name="dateToMonth0">
-                      <option value="06">06 - Jun</option>
-                      <option value="07">07 - Jul</option>
-                    </select>
-                    <span class="select-arrow"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="container">
+        <div id="target">Loading...</div>
+        <div class="add-new-possition">
+          <button id='addCompany'>Add new company</button>
 
-            <div class="field c12">
-              <label class="form-label">Experience</label>
-              <div class="new_form-field">
-                <textarea class="form-field" data-listener="keyup" name="experience0" rows="5"></textarea>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
+        <script>
+
+        function renderJobs(jobs, containerName){
+          let url = '{% static "app/js/job.mst" %}'
+          // TODO replace with js
+          $.get(url, function(template){
+            var rendered = Mustache.render(template, {jobs: jobs});
+            $('#target').html(rendered);
 
 
+            let currentYear = new Date().getFullYear()
+            let container = document.getElementById("target")
+            let selects = container.querySelectorAll("select[data-date-part=year]")
+            for (var i=0; i < selects.length; i++){
+              generateYearOptions(selects[i], currentYear, 50);
+            }
+            let containers = document.querySelectorAll(`[data-n=${containerName}]`)
+            setDates(jobs, 'select', containers);
+            registerListener(containers)
+          });
+        };
 
-
-      </main>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>    <script src="{% static "app/js/main.js" %}"></script>
+        </script>
+      </div>
+    </main>
     <script src="{% static "app/js/ajaxRequests.js" %}"></script>
+    <script src="{% static "app/js/main.js" %}"></script>
   </body>
 </html>

@@ -31,12 +31,9 @@ $.ajaxSetup({
     }
 });
 
-function getAllInputs(cssSelector) {
-  return document.querySelectorAll(cssSelector)
-}
 
 function getContainerName(target){
-  let container = target.closest('.form');
+  let container = target.closest('.panel');
   if (container.dataset && container.dataset.n){
     return container.dataset.n
   } else {
@@ -78,24 +75,26 @@ function onDateChange(target, fn, event){
 }
 
 function onFieldChange(target, fn, event) {
-  let model, many;
-  model = getContainerName(target);
+  let model = getContainerName(target);
   listen(target, fn, event, [model, target])
 }
 
 function updateDate(model, target, selects){
   let many = checkMany(target);
   let url = `http://127.0.0.1:8000/api/v1/${model}/`;
-  url = many ? url + `${many}/` : url
-  console.log(url)
   let data, date, prefix;
   prefix = target.dataset.prefix;
   date = {
     [selects[0].dataset.datePart]: selects[0].value,
     [selects[1].dataset.datePart]: selects[1].value,
   };
-  date = new Date(date.year, date.month)
-  data = {[prefix]: date}
+  date = new Date(date.year, date.month);
+  let datestring = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+  if (many){
+    data = {[prefix]: datestring, 'priority': many}
+  } else {
+    data = {[prefix]: datestring}
+  }
   $.ajax({
     method: "PUT",
     url: url,
@@ -110,11 +109,16 @@ function updateDate(model, target, selects){
 }
 
 function updateField(model, target){
+  // no model here
   let many = checkMany(target);
   let name = many ? target.name.slice(0, -1) : target.name
-  let data = {[name]: target.value}
+  let data;
+  if (many){
+    data = {[name]: target.value, 'priority': many}
+  } else {
+    data = {[name]: target.value}
+  }
   let url = `http://127.0.0.1:8000/api/v1/${model}/`
-  url = many ? url + `${many}/` : url
   $.ajax({
     method: "PUT",
     url: url,
@@ -136,7 +140,6 @@ function getProfileData(){
       success: function(msg) {
         console.log("SUCCESS", msg)
         let pairs = Object.entries(msg)
-        console.log(pairs)
         for (var i=0; i < pairs.length; i++){
           let key = pairs[i][0]
           let value = pairs[i][1]
@@ -150,42 +153,23 @@ function getProfileData(){
    })
 }
 
-function getJobData(){
+function addCompany(){
   $.ajax({
-      method: "GET",
+      method: "POST",
       url: `http://127.0.0.1:8000/api/v1/jobs/`,
       success: function(msg) {
         console.log("SUCCESS", msg)
-        // let pairs = Object.entries(msg)
-        // console.log(pairs)
-        // for (var i=0; i < pairs.length; i++){
-        //   let key = pairs[i][0]
-        //   let value = pairs[i][1]
-        //   let inp = document.querySelector(`[name="${key}"]`)
-        //   inp.value = value;
-        // }
-
+        getJobData()
       },
-      error: function(msg) {
-        console.log("ERROR", msg)
-      }
-   })
-}
-
-getProfileData()
-
-// getJobData()
+      error: function(msg) {console.log("ERROR", msg)}
+   });
+};
 
 
-const profileInputs = getAllInputs('[data-listener]')
-let event;
-for (var i=0; i < profileInputs.length; i++){
-  let target = profileInputs[i]
-  event = target.dataset && target.dataset.listener
-  if (event === "changeDate") {
-    onDateChange(target, updateDate, "change");
-  }
-  else if (event) {
-    onFieldChange(target, updateField, event);
-  }
-}
+var addCompanyBtn = document.getElementById("addCompany")
+addCompanyBtn.addEventListener('click', e => {
+    addCompany();
+})
+
+
+// getProfileData()
