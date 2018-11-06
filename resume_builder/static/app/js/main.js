@@ -73,7 +73,7 @@ image.addEventListener('load', function (event){
 
 var btn = document.getElementById("REQUEST");
 btn.addEventListener('click', () => {
-  getJobData()
+  getData("jobs")
 })
 
 function getAllInputs(element, cssSelector) {
@@ -102,13 +102,13 @@ function registerListener(containers){
 
 
 
-function getJobData(){
+function getData(dataName){
           $.ajax({
               method: "GET",
-              url: `http://127.0.0.1:8000/api/v1/jobs/`,
+              url: `http://127.0.0.1:8000/api/v1/${dataName}/`,
               success: function(data) {
                 console.log("SUCCESS", data)
-                renderJobs(data, "jobs")
+                render(data, dataName)
               },
               error: function(msg) {
                 console.log("ERROR", msg)
@@ -180,7 +180,7 @@ function deleteJob(target){
       data: {"priority": priority},
       success: function(data) {
         console.log("SUCCESS", data)
-        getJobData()
+        getData("jobs")
       },
       error: function(msg) {
         console.log("ERROR", msg)
