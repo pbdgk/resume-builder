@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Profile, Job, School
+from .models import Profile, Job, School, Skill
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -19,6 +19,12 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = ('name', 'start', 'end', 'description', 'priority')
+
+
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = ('name', 'rating', 'priority')
 
 
 # class PersonalDataSerializer(serializers.ModelSerializer):

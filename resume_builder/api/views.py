@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from app.models import Profile, Job, School
-from app.serializers import ProfileSerializer, JobSerializer, SchoolSerializer
+from app.models import Profile, Job, School, Skill
+from app.serializers import ProfileSerializer, JobSerializer, SchoolSerializer, SkillSerializer
 
 
 class ProfileRestView(APIView):
@@ -70,8 +70,8 @@ class SchoolRestView(APIView):
         return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, format=None):
-        job = School.objects.create(user=request.user)
-        serialized = SchoolSerializer(job)
+        school = School.objects.create(user=request.user)
+        serialized = SchoolSerializer(school)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def put(self, request, format=None):
@@ -87,4 +87,34 @@ class SchoolRestView(APIView):
         priority = request.POST.get('priority')
         school = School.objects.filter(user=request.user).filter(priority=priority)[0]
         serialized = JobSerializer(school.delete())
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+class SkillRestView(APIView):
+
+    def get(self, request, format=None):
+        skills = Skill.objects.filter(user=request.user)
+        serialized = SkillSerializer(skills, many=True)
+        if serialized:
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, format=None):
+        skill = Skill.objects.create(user=request.user)
+        serialized = SkillSerializer(skill)
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
+
+    def put(self, request, format=None):
+        priority = request.POST.get('priority')
+        skill = Skill.objects.filter(user=request.user).filter(priority=priority)[0]
+        serialized = SkillSerializer(skill, data=request.data, partial=True)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, format=None):
+        priority = request.POST.get('priority')
+        skill = Skill.objects.filter(user=request.user).filter(priority=priority)[0]
+        serialized = SkillSerializer(skill.delete())
         return Response(serialized.data, status=status.HTTP_200_OK)
