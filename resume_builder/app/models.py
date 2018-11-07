@@ -74,6 +74,32 @@ class School(models.Model):
                 obj.save()
 
 
+class Skill(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, blank=True, default="")
+    rating = models.IntegerField(blank=True, default=0)
+    priority = models.IntegerField(blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.priority is None:
+            objects = Skill.objects.filter(user=self.user)
+            if not objects.exists():
+                self.priority = 1
+            else:
+                self.priority = objects.count() + 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        priority = self.priority
+        user = self.user
+        super().delete(*args, **kwargs)
+        objects = Skill.objects.filter(user=user)
+        for obj in objects:
+            if obj.priority > priority:
+                obj.priority = obj.priority - 1
+                obj.save()
+
+
 # class Photo(models.Model):
 #     owner = models.ForeignKey('auth.User', related_name='image')
 #     image = models.ImageField(upload_to='photos')
@@ -101,7 +127,3 @@ class School(models.Model):
 #     name = models.CharField(max_length=255)
 #     stars = models.IntegerField()
 #
-# class Skill(models.Model):
-#     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=255)
-#     stars = models.IntegerField()
