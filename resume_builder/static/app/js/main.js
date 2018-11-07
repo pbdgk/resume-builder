@@ -1,5 +1,15 @@
 'use strict'
 
+
+function showGoodResponse(){
+  btn = document.getElementById("resMessage");
+  btn.classList.add('show')
+  setTimeout(function() {
+    btn.classList.remove('show')
+  }, 1000);
+}
+
+
 function addField() {
 
   var panel = document.getElementById("info3")
@@ -78,11 +88,16 @@ btn.addEventListener('click', () => {
   getData("schools")
 })
 
+var btn = document.getElementById("skillsReq");
+btn.addEventListener('click', () => {
+  getData("skills")
+})
+
 function getAllInputs(element, cssSelector) {
   return element.querySelectorAll(cssSelector)
 }
 
-function registerListener(containers){
+function registerListeners(containers){
   for (var i=0; i < containers.length; i++){
     let container = containers[i]
     const inputs = getAllInputs(container, '[data-listener]')
@@ -93,7 +108,10 @@ function registerListener(containers){
       if (event === "changeDate") {
         onDateChange(target, updateDate, "change");
       }
-      else if (event) {
+      else if (event === "click") {
+        onRatingChange(target, updateRating, event);
+      }
+      else if (event){
         onFieldChange(target, updateField, event);
       }
     }
@@ -156,12 +174,31 @@ function parseDate(date){
 }
 
 function setDates(jobs, selector, containers){
-          for (var i=0; i < containers.length; i++){
-            let dateContainer, part, block = containers[i], job = jobs[i];
-            let dateObj = {"start": parseDate(job.start), "end": parseDate(job.end)}
-            for (part in dateObj){
-              dateContainer = block.querySelector(`[data-prefix=${part}]`)
-              setYearAndMonth(dateContainer, selector, dateObj[part])
-            }
-          }
-        }
+  for (var i=0; i < containers.length; i++){
+    console.log(containers)
+    let dateContainer, part, block = containers[i], job = jobs[i];
+    let dateObj = {"start": parseDate(job.start), "end": parseDate(job.end)}
+    for (part in dateObj){
+      dateContainer = block.querySelector(`[data-prefix=${part}]`)
+      setYearAndMonth(dateContainer, selector, dateObj[part])
+    }
+  }
+}
+
+
+
+
+var addJobBtn = document.getElementById("addJob")
+addJobBtn.addEventListener('click', e => {
+  addSection("jobs");
+})
+
+var addSchoolBtn = document.getElementById("addSchool")
+addSchoolBtn.addEventListener('click', e => {
+  addSection("schools");
+})
+
+var addSkillBtn = document.getElementById("addSkill")
+addSkillBtn.addEventListener('click', e => {
+  addSection("skills");
+})
