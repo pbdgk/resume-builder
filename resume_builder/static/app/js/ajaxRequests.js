@@ -56,7 +56,20 @@ function listen(target, fn, event, argumentsToApply){
       fn.apply(null, argumentsToApply);
     }, doneTypingInterval)
   });
+}
 
+
+function listenRating(target, fn, event, model){
+  target.addEventListener('mouseover', function(){
+    listenOnHoverStar(this);
+  });
+  target.addEventListener('mouseout', function(){
+    listenOnMouseOut(this);
+  });
+  target.addEventListener(event, function(){
+    selectStar(this);
+    updateRating(model, this);
+  });
 }
 
 function onDateChange(target, fn, event){
@@ -75,6 +88,35 @@ function onDateChange(target, fn, event){
 function onFieldChange(target, fn, event) {
   let model = getContainerName(target);
   listen(target, fn, event, [model, target])
+}
+
+function onRatingChange(target, fn, event) {
+  let model = getContainerName(target)
+  // starR()
+  listenRating(target, fn, event, model)
+}
+
+function updateRating(model, target){
+  let url, many, rating, data
+  url = `http://127.0.0.1:8000/api/v1/${model}/`;
+  many = checkMany(target)
+  rating = target.dataset && target.dataset.rating
+  data = {
+    rating: rating,
+    priority: many
+  }
+  $.ajax({
+    method: "PUT",
+    url: url,
+    data: data,
+    success: function(msg) {
+      showGoodResponse()
+      console.log("SUCCESS", msg)
+    },
+    error: function(msg) {
+      console.log("ERROR", msg)
+    }
+  })
 }
 
 function updateDate(model, target, selects){
@@ -100,6 +142,7 @@ function updateDate(model, target, selects){
     url: url,
     data: data,
     success: function(msg) {
+      showGoodResponse()
       console.log("SUCCESS", msg)
     },
     error: function(msg) {
@@ -109,7 +152,6 @@ function updateDate(model, target, selects){
 }
 
 function updateField(model, target){
-  // no model here
   let data, many;
   many = checkMany(target);
   if (many){
@@ -123,6 +165,7 @@ function updateField(model, target){
     url: url,
     data: data,
     success: function(msg) {
+      showGoodResponse()
       console.log("SUCCESS", msg)
     },
     error: function(msg) {
@@ -178,14 +221,5 @@ function deleteSection(target, type){
    })
 }
 
-var addJobBtn = document.getElementById("addJob")
-addJobBtn.addEventListener('click', e => {
-    addSection("jobs");
-})
-
-var addSchoolBtn = document.getElementById("addSchool")
-addSchoolBtn.addEventListener('click', e => {
-    addSection("schools");
-})
 
 // getProfileData()
