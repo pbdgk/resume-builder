@@ -38,7 +38,7 @@ function showGoodResponse() {
 class BaseRenderer {
   render() {
     this.rememberContainer();
-    let url = `/static/app/js/${this.cName}.mst`;
+    let url = `/static/app/mst/${this.cName}.mst`;
     let promise = getTemplate(url)
     for (let i=0; i<this.methods.length; i++){
       promise = promise.then(this.methods[i].bind(this))
