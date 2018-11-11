@@ -1,6 +1,29 @@
 'use strict'
 
-// ====================== Renderers =====  =============================
+// ====================== CSRF token and headers =====================
+const csrftoken = getCookie('csrftoken');
+const myHeaders = new Headers({
+  "X-CSRFToken": csrftoken,
+  "Accept": "application/json",
+  "Content-Type": "application/json"
+});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// ====================== Renderers ==================================
 
 class BaseRenderer {
   render() {
