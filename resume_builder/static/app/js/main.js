@@ -29,11 +29,11 @@ class BaseRenderer {
   render() {
     this.rememberContainer();
     let url = `/static/app/js/${this.cName}.mst`;
-    let pr = fetchData(url)
+    let promise = getTemplate(url)
     for (let i=0; i<this.methods.length; i++){
-      pr = pr.then(this.methods[i].bind(this))
+      promise = promise.then(this.methods[i].bind(this))
     }
-    pr.catch(e => {
+    promise.catch(e => {
       console.error(e);
     });
   }
@@ -358,4 +358,65 @@ class FieldChangeListener {
       }
     });
   }
+}
+
+// ====================== Entry =============================
+
+function getData(cName) {
+  let url = `http://127.0.0.1:8000/api/v1/${cName}/`;
+  return fetch(url)
+    .then(response => {
+      return response.json()
+    })
+    .catch(e => {
+      console.log(e.message);
+    });
+}
+
+// TODO check response
+function getTemplate(url) {
+  return fetch(url)
+    .then(response => {
+      // console.log(respones)
+      let p = response.text();
+      return p;
+    })
+    .catch(e => {
+      console.log(e);
+    });
+}
+
+const objects = {
+  profiles: {
+    renderer: ProfileRenderer,
+    listeners: [FieldChangeListener]
+  },
+  jobs: {
+    renderer: JobRenderer,
+    listeners: [FieldChangeListener, DateChangeListener]
+  },
+  schools: {
+    renderer: SchoolRenderer,
+    listeners: [FieldChangeListener, DateChangeListener]
+  },
+  skills: {
+    renderer: SkillRenderer,
+    listeners: [FieldChangeListener, RatingChangeListener]
+  }
+};
+
+["profiles", "jobs", "schools", "skills"].forEach(cName => {
+  getData(cName)
+    .then(data => {
+    render(cName, data);
+    })
+    .catch(e => {
+      console.log(e.message)
+    })
+});
+
+function render(cName, data) {
+  let { renderer, listeners } = objects[cName];
+  let r = new renderer(data, cName, listeners);
+  r.render();
 }
