@@ -23,6 +23,16 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// ====================== Messages ==================================
+// TODO some how move to models
+function showGoodResponse() {
+  let btn = document.getElementById("resMessage");
+  btn.classList.add("show");
+  setTimeout(function() {
+    btn.classList.remove("show");
+  }, 1000);
+}
+
 // ====================== Renderers ==================================
 
 class BaseRenderer {
@@ -201,7 +211,7 @@ class SkillRenderer extends WithRatingsRenderer {
 
 // ====================== Change Listeners =============================
 
-class BaserChangeListener {
+class BaseChangeListener {
   constructor(container, cName){
     this.container = container;
     this.cName = cName;
@@ -212,8 +222,9 @@ class BaserChangeListener {
   }
 }
 
-class RatingChangeListener {
+class RatingChangeListener extends BaseChangeListener {
   listen() {
+    console.log('here')
     let ratings = document.getElementsByClassName("star");
     for (let i = 0; i < ratings.length; i++) {
       let rating = ratings[i];
@@ -274,6 +285,9 @@ class RatingChangeListener {
           showGoodResponse();
           console.log("SUCCESS", msg);
         }
+      })
+      .catch(e => {
+        console.log(e.message);
       });
     });
   }
@@ -283,7 +297,7 @@ class RatingChangeListener {
   }
 }
 
-class DateChangeListener {
+class DateChangeListener extends BaseChangeListener {
   getDatePrefix(target) {
     let container = target.closest("[data-prefix]");
     return container.dataset.prefix;
@@ -320,11 +334,14 @@ class DateChangeListener {
         showGoodResponse();
         console.log("SUCCESS", msg);
       }
-    });
+    })
+      .catch(e => {
+        console.log(e.message);
+      });
   }
 }
 
-class FieldChangeListener {
+class FieldChangeListener extends BaseChangeListener{
   listen() {
     let fields = this.container.getElementsByClassName("form-field");
     for (let i = 0; i < fields.length; i++) {
@@ -350,13 +367,16 @@ class FieldChangeListener {
       body: JSON.stringify(data),
       headers: myHeaders
     }).then(response => {
-      if (response.status === 200) {
-        showGoodResponse();
-        console.log("Good");
-      } else {
+      if (response.status !== 200) {
         console.log("error", response.message);
+      } else {
+        console.log("Good");
+        showGoodResponse();
       }
-    });
+    })
+      .catch(e => {
+        console.log(e.message);
+      });
   }
 }
 
