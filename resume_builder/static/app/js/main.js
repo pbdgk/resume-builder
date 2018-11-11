@@ -131,3 +131,43 @@ class WithRatingsRenderer extends MultipleRenderer {
     }
   }
 }
+
+class ProfileRenderer extends SingleRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [this.renderTemplate, this.registerListeners]
+  }
+}
+class JobRenderer extends WithDatesRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [this.renderTemplate, this.manageDateFields, this.registerListeners]
+  }
+}
+
+class SchoolRenderer extends WithDatesRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [this.renderTemplate, this.manageDateFields, this.registerListeners]
+  }
+}
+
+class SkillRenderer extends WithRatingsRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [this.renderTemplate, this.manageRatingFields, this.registerListeners]
+  }
+
+}
