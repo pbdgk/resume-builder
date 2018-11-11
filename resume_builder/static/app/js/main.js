@@ -1,204 +1,133 @@
 'use strict'
 
-
-function showGoodResponse(){
-  btn = document.getElementById("resMessage");
-  btn.classList.add('show')
-  setTimeout(function() {
-    btn.classList.remove('show')
-  }, 1000);
-}
-
-
-function addField() {
-
-  var panel = document.getElementById("info3")
-
-  var field = document.createElement("div");
-  field.classList.add('field', 'c12');
-
-  var label = document.createElement("label");
-  label.classList.add('form-label');
-
-  var text = document.createTextNode("New");
-  var inp = document.createElement("input");
-  inp.classList.add('form-field');
-
-  label.appendChild(text)
-  field.appendChild(label)
-  field.appendChild(inp)
-  panel.appendChild(field)
-}
-
-var btn = document.getElementById("btn-upload-avatar");
-btn.addEventListener("click", uploadAvatar);
-
-
-function uploadAvatar(){
-  let btn = document.getElementById("inp-avatar");
-  btn.click();
-}
-
-var modal = document.getElementById("uploadAvatarModal");
-var btn = document.getElementById("myBtn");
-
-// TODO: remove
-btn.onclick = function(){
-  modal.style.display = "block";
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+class BaseRenderer {
+  render() {
+    this.rememberContainer();
+    let url = `/static/app/js/${this.cName}.mst`;
+    let pr = fetchData(url)
+    for (let i=0; i<this.methods.length; i++){
+      pr = pr.then(this.methods[i].bind(this))
     }
-};
-
-function previewImage( input ) {
-  let preview = document.getElementById('toCropImg');
-  let files = input.files
-  if (files && files[0]) {
-    let reader = new FileReader();
-    reader.addEventListener('load', function (event){
-      cropper ? cropper.replace(reader.result) : preview.src = reader.result;
-      modal.style.display = "block";
-    }, false)
-    reader.readAsDataURL(files[0]);
+    pr.catch(e => {
+      console.error(e);
+    });
+  }
+  registerListeners() {
+    const len = this.listeners.length;
+    for (let i = 0; i < len; i++) {
+      let listener = new this.listeners[i](this.container, this.cName);
+      listener.listen();
     }
-  };
+  }
 
+  
 
-let cropper;
-let image = document.getElementById('toCropImg');
-image.addEventListener('load', function (event){
-  cropper = new Cropper(image, {
-    aspectRatio: 1 / 1,
-    checkCrossOrigin: false,
-    preview: ".preview-box"
-  });
-});
-
-
-var btn = document.getElementById("jobsReq");
-btn.addEventListener('click', () => {
-  getData("jobs")
-})
-
-var btn = document.getElementById("schoolsReq");
-btn.addEventListener('click', () => {
-  getData("schools")
-})
-
-var btn = document.getElementById("skillsReq");
-btn.addEventListener('click', () => {
-  getData("skills")
-})
-
-function getAllInputs(element, cssSelector) {
-  return element.querySelectorAll(cssSelector)
-}
-
-function registerListeners(containers){
-  for (var i=0; i < containers.length; i++){
-    let container = containers[i]
-    const inputs = getAllInputs(container, '[data-listener]')
-    let event, target;
-    for (var j=0; j < inputs.length; j++){
-      target = inputs[j]
-      event = target.dataset && target.dataset.listener
-      if (event === "changeDate") {
-        onDateChange(target, updateDate, "change");
-      }
-      else if (event === "click") {
-        onRatingChange(target, updateRating, event);
-      }
-      else if (event){
-        onFieldChange(target, updateField, event);
-      }
-    }
+  rememberContainer() {
+    this.container = document.getElementById(`${this.cName}Target`);
   }
 }
 
-function getData(dataName){
-  $.ajax({
-      method: "GET",
-      url: `http://127.0.0.1:8000/api/v1/${dataName}/`,
-      success: function(data) {
-        console.log("SUCCESS", data)
-        render(data, dataName)
-      },
-      error: function(msg) {
-        console.log("ERROR", msg)
-      }
-   })
+class SingleRenderer extends BaseRenderer {
+  renderTemplate(template) {
+    var rendered = Mustache.render(template, this.data);
+    $(`#${this.cName}Target`).html(rendered);
+  }
 }
 
-function generateYearOptions(select, endYear, range){
-  for (var i = 0; i <= range; i++){
-      var opt = document.createElement('option');
-      opt.value = endYear - i ;
-      opt.innerHTML = endYear - i;
+class MultipleRenderer extends BaseRenderer {
+  renderTemplate(template) {
+    var rendered = Mustache.render(template, { [this.cName]: this.data });
+    $(`#${this.cName}Target`).html(rendered);
+  }
+}
+
+class WithDatesRenderer extends MultipleRenderer {
+  manageDateFields() {
+    let selects = this.container.querySelectorAll(
+      "select[data-date-part=year]"
+    );
+    for (let i = 0; i < selects.length; i++) {
+      this.populateYearOptions(selects[i], 50);
+    }
+    this.setDates();
+  }
+
+  populateYearOptions(select, range) {
+    let currentYear = new Date().getFullYear();
+    for (let i = 0; i <= range; i++) {
+      let opt = document.createElement("option");
+      opt.value = currentYear - i;
+      opt.innerHTML = currentYear - i;
       select.appendChild(opt);
+    }
   }
-}
 
-function chooseSelect(select, value){
-  let opts = select.options;
-  for (var i = 0; i < opts.length; i++) {
-    if (opts[i].value == value){
-      opts.selectedIndex = i;
-      break;
+  setDates() {
+    let containers = this.container.querySelectorAll("section");
+    let dateContainer, data, section;
+    for (let i = 0; i < containers.length; i++) {
+        dateContainer = containers[i],
+        data = this.data[i];
+        let dateObj = {
+          start: this.parseDate(data.start),
+          end: this.parseDate(data.end)
+        };
+        for (let datePrefix in dateObj){
+          for (let datePart in dateObj[datePrefix]){
+            this.setYearAndMonth(dateContainer, datePrefix, datePart, dateObj[datePrefix][datePart])
+          }
+        }
+    }
+  }
+
+  setYearAndMonth(dateContainer, datePrefix, datePart, data) {
+    let block, select;
+    block = dateContainer.querySelector(`[data-prefix=${datePrefix}]`)
+    select = block.querySelector(`[data-date-part=${datePart}]`)
+    this.chooseSelect(select, data)
+  }
+
+  parseDate(date) {
+    let year, month, d;
+    if (date) {
+      d = new Date(date);
+      year = d.getFullYear();
+      month = d.getMonth();
+    } else {
+      year = "YYYY";
+      month = "MM";
+    }
+    return { year: year, month: month };
+  }
+
+  chooseSelect(select, value) {
+    let opts = select.options;
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].value == value) {
+        opts.selectedIndex = i;
+        break;
+      }
     }
   }
 }
 
-function setYearAndMonth(container, selector, part){
-    let selects, dateSelects, yearOrMonth;
-    selects = container.querySelectorAll(selector);
-    dateSelects = {"year": selects[0], "month": selects[1]}
-    for (yearOrMonth in dateSelects){
-      chooseSelect(dateSelects[yearOrMonth], part[yearOrMonth])
+class WithRatingsRenderer extends MultipleRenderer {
+  manageRatingFields() {
+    let containers = document.getElementsByClassName("rating-stars");
+    for (let i = 0; i < containers.length; i++) {
+      this.setStar(containers[i], this.data[i].rating);
     }
-}
-
-function parseDate(date){
-  let year, month, d;
-  if (date){
-    d = new Date(date)
-    year = d.getFullYear()
-    month = d.getMonth()
-  } else {
-    year = "YYYY"
-    month = 'MM'
   }
-  return {"year": year, "month": month}
-}
 
-function setDates(jobs, selector, containers){
-  for (var i=0; i < containers.length; i++){
-    console.log(containers)
-    let dateContainer, part, block = containers[i], job = jobs[i];
-    let dateObj = {"start": parseDate(job.start), "end": parseDate(job.end)}
-    for (part in dateObj){
-      dateContainer = block.querySelector(`[data-prefix=${part}]`)
-      setYearAndMonth(dateContainer, selector, dateObj[part])
+  setStar(container, rating) {
+    let onStar = parseInt(rating, 10);
+    let stars = container.querySelectorAll(".star");
+    let i;
+    for (i = 0; i < stars.length; i++) {
+      stars[i].classList.remove("selected");
+    }
+    for (i = 0; i < onStar; i++) {
+      stars[i].classList.add("selected");
     }
   }
 }
-
-
-
-
-var addJobBtn = document.getElementById("addJob")
-addJobBtn.addEventListener('click', e => {
-  addSection("jobs");
-})
-
-var addSchoolBtn = document.getElementById("addSchool")
-addSchoolBtn.addEventListener('click', e => {
-  addSection("schools");
-})
-
-var addSkillBtn = document.getElementById("addSkill")
-addSkillBtn.addEventListener('click', e => {
-  addSection("skills");
-})
