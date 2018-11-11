@@ -1,5 +1,7 @@
 'use strict'
 
+// ====================== Renderers =====  =============================
+
 class BaseRenderer {
   render() {
     this.rememberContainer();
@@ -141,6 +143,7 @@ class ProfileRenderer extends SingleRenderer {
     this.methods = [this.renderTemplate, this.registerListeners]
   }
 }
+
 class JobRenderer extends WithDatesRenderer {
   constructor(data, cName, listeners) {
     super();
@@ -169,5 +172,170 @@ class SkillRenderer extends WithRatingsRenderer {
     this.listeners = listeners;
     this.methods = [this.renderTemplate, this.manageRatingFields, this.registerListeners]
   }
+}
 
+
+// ====================== Change Listeners =============================
+
+class RatingChangeListener {
+  constructor(container, cName) {
+    this.container = container;
+    this.cName = cName;
+  }
+
+  listen() {
+    let ratings = document.getElementsByClassName("star");
+    for (let i = 0; i < ratings.length; i++) {
+      let rating = ratings[i];
+      this.listenRating(rating);
+    }
+  }
+
+  listenRating(target) {
+    target.addEventListener("mouseover", () => {
+      let onStar, stars;
+      onStar = parseInt(target.dataset.rating, 10);
+      stars = target.parentNode.children;
+      for (let i = 0; i < stars.length; i++) {
+        if (i < onStar) {
+          stars[i].classList.add("hover");
+        } else {
+          stars[i].classList.remove("hover");
+        }
+      }
+    });
+
+    target.addEventListener("mouseout", () => {
+      let stars;
+      stars = target.parentNode.children;
+      for (let i = 0; i < stars.length; i++) {
+        stars[i].classList.remove("hover");
+      }
+    });
+
+    target.addEventListener("click", () => {
+      //select star
+      let onStar = parseInt(target.dataset.rating, 10);
+      let stars = target.parentNode.children;
+      let i;
+      for (i = 0; i < stars.length; i++) {
+        stars[i].classList.remove("selected");
+      }
+      for (i = 0; i < onStar; i++) {
+        stars[i].classList.add("selected");
+      }
+      // update rating
+      let url, many, rating, data;
+      url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+      many = checkMany(target);
+      rating = target.dataset && target.dataset.rating;
+      data = {
+        rating: rating,
+        priority: many
+      };
+      fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: myHeaders
+      }).then(response => {
+        if (response.status !== 200) {
+          console.log("error", response.status);
+        } else {
+          showGoodResponse();
+          console.log("SUCCESS", msg);
+        }
+      });
+    });
+  }
+  onRatingChange() {
+    let model = getContainerName(target);
+    listenRating(target, fn, event, model);
+  }
+}
+
+class DateChangeListener {
+  constructor(container, cName) {
+    this.container = container;
+    this.cName = cName;
+  }
+
+  getDatePrefix(target) {
+    let container = target.closest("[data-prefix]");
+    return container.dataset.prefix;
+  }
+
+  listen() {
+    let selects = this.container.getElementsByTagName("select");
+    for (let i = 0; i < selects.length; i++) {
+      let select = selects[i];
+      select.addEventListener("change", () => {
+        this.updateDate(this.cName, select);
+      });
+    }
+  }
+
+  updateDate(model, target) {
+    let data, url;
+    console.log(target);
+    url = `http://127.0.0.1:8000/api/v1/${model}/`;
+    data = {
+      [target.dataset.datePart]: target.value,
+      priority: checkMany(target),
+      prefix: this.getDatePrefix(target)
+    };
+    console.log(data)
+    fetch(url, {
+      method: "PUT",
+      body: data,
+      headers: myHeaders
+    }).then(response => {
+      if (response.status !== 200) {
+        console.log("error", response.status);
+      } else {
+        showGoodResponse();
+        console.log("SUCCESS", msg);
+      }
+    });
+  }
+}
+
+class FieldChangeListener {
+  constructor(container, cName) {
+    this.container = container;
+    this.cName = cName;
+  }
+
+  listen() {
+    let fields = this.container.getElementsByClassName("form-field");
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      field.addEventListener("keyup", () => {
+        this.updateField(field);
+      });
+    }
+  }
+
+  updateField(target) {
+    console.log(this.cName)
+    let data, many;
+    many = checkMany(target);
+    if (many) {
+      data = { [target.name]: target.value, priority: many };
+    } else {
+      data = { [target.name]: target.value };
+    }
+    let url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+    fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: myHeaders
+    }).then(response => {
+      if (response.status === 200) {
+        showGoodResponse();
+        console.log("Good");
+      } else {
+        console.log("error", response.message);
+      }
+    });
+  }
 }
