@@ -1,0 +1,33 @@
+<section class="panel">
+    <div class="form" data-n="profiles">
+    <div class="field c6">
+        <label class="form-label">First name</label>
+        <div class="new_form-field">
+        <input class="form-field" type="text" data-listener="keyup" name="first_name" value={{first_name}}>
+        </div>
+    </div>
+    <div class="field c6">
+        <label class="form-label">Last name</label>
+        <div class="new_form-field">
+        <input class="form-field" type="text" data-listener="keyup" name="last_name" value={{last_name}}>
+        </div>
+    </div>
+    <div class="field c12">
+        <label class="form-label">Profession</label>
+        <div class="new_form-field">
+        <input class="form-field" type="text" data-listener="keyup" name="profession" value={{profession}}>
+        </div>
+    </div>
+    </div>
+
+    <div class="avatar-wrapper">
+    <div class="avatar"></div>
+    <div class="overlay">
+        <div class="btn-photo" id="btn-upload-avatar">
+        <i class="fas fa-cloud-upload-alt"></i>
+        Change Photo
+        <input type="file" name="avatar" onchange="previewImage(this)" id="inp-avatar" style="display:none">
+        </div>
+    </div>
+    </div>
+</section>
