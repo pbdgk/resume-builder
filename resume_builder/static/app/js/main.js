@@ -64,6 +64,7 @@ class MultipleRenderer extends BaseRenderer {
     var rendered = Mustache.render(template, { [this.cName]: this.data });
     $(`#${this.cName}Target`).html(rendered);
   }
+  
 }
 
 class WithDatesRenderer extends MultipleRenderer {
@@ -200,12 +201,18 @@ class SkillRenderer extends WithRatingsRenderer {
 
 // ====================== Change Listeners =============================
 
-class RatingChangeListener {
-  constructor(container, cName) {
+class BaserChangeListener {
+  constructor(container, cName){
     this.container = container;
     this.cName = cName;
   }
+  getPriority(target){
+    let container = target.closest('section')
+    return container.dataset && container.dataset.num;
+  }
+}
 
+class RatingChangeListener {
   listen() {
     let ratings = document.getElementsByClassName("star");
     for (let i = 0; i < ratings.length; i++) {
@@ -250,7 +257,7 @@ class RatingChangeListener {
       // update rating
       let url, many, rating, data;
       url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
-      many = checkMany(target);
+      many = this.getPriority(target);
       rating = target.dataset && target.dataset.rating;
       data = {
         rating: rating,
@@ -277,11 +284,6 @@ class RatingChangeListener {
 }
 
 class DateChangeListener {
-  constructor(container, cName) {
-    this.container = container;
-    this.cName = cName;
-  }
-
   getDatePrefix(target) {
     let container = target.closest("[data-prefix]");
     return container.dataset.prefix;
@@ -303,7 +305,7 @@ class DateChangeListener {
     url = `http://127.0.0.1:8000/api/v1/${model}/`;
     data = {
       [target.dataset.datePart]: target.value,
-      priority: checkMany(target),
+      priority: this.getPriority(target),
       prefix: this.getDatePrefix(target)
     };
     console.log(data)
@@ -323,11 +325,6 @@ class DateChangeListener {
 }
 
 class FieldChangeListener {
-  constructor(container, cName) {
-    this.container = container;
-    this.cName = cName;
-  }
-
   listen() {
     let fields = this.container.getElementsByClassName("form-field");
     for (let i = 0; i < fields.length; i++) {
@@ -341,7 +338,7 @@ class FieldChangeListener {
   updateField(target) {
     console.log(this.cName)
     let data, many;
-    many = checkMany(target);
+    many = this.getPriority(target);
     if (many) {
       data = { [target.name]: target.value, priority: many };
     } else {
