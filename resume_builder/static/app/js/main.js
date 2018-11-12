@@ -33,6 +33,9 @@ function showGoodResponse() {
   }, 1000);
 }
 
+
+// ====================== cropper init ==================================
+
 // ====================== Renderers ==================================
 
 class BaseRenderer {
@@ -174,7 +177,12 @@ class ProfileRenderer extends SingleRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [this.renderTemplate, this.registerListeners]
+    this.methods = [this.renderTemplate, this.setAvatar,this.registerListeners]
+  }
+
+  setAvatar() {
+    let photoBox = document.querySelector(".avatar")
+    photoBox.style.backgroundImage = `url(${this.data.photo})`
   }
 }
 
@@ -224,7 +232,6 @@ class BaseChangeListener {
 
 class RatingChangeListener extends BaseChangeListener {
   listen() {
-    console.log('here')
     let ratings = document.getElementsByClassName("star");
     for (let i = 0; i < ratings.length; i++) {
       let rating = ratings[i];
@@ -315,14 +322,12 @@ class DateChangeListener extends BaseChangeListener {
 
   updateDate(model, target) {
     let data, url;
-    console.log(target);
     url = `http://127.0.0.1:8000/api/v1/${model}/`;
     data = {
       [target.dataset.datePart]: target.value,
       priority: this.getPriority(target),
       prefix: this.getDatePrefix(target)
     };
-    console.log(data)
     fetch(url, {
       method: "PUT",
       body: data,
@@ -342,6 +347,7 @@ class DateChangeListener extends BaseChangeListener {
 }
 
 class FieldChangeListener extends BaseChangeListener{
+  // TODO maybe should remove all this ids
   listen() {
     let fields = this.container.getElementsByClassName("form-field");
     for (let i = 0; i < fields.length; i++) {
@@ -353,7 +359,6 @@ class FieldChangeListener extends BaseChangeListener{
   }
 
   updateField(target) {
-    console.log(this.cName)
     let data, many;
     many = this.getPriority(target);
     if (many) {
@@ -380,6 +385,104 @@ class FieldChangeListener extends BaseChangeListener{
   }
 }
 
+class ImageChangeListener extends BaseChangeListener{
+  hideModal() {
+    const modal = document.getElementById("uploadAvatarModal");
+    window.addEventListener('click', event => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    })
+  }
+  listen(){
+    this.initCropper()
+    this.hideModal()
+    let btn = document.getElementById("btn-upload-avatar");
+    btn.addEventListener("click", () => {
+      this.uploadAvatar()
+    });
+    let inp = document.getElementById("inp-avatar")
+  const modal = document.getElementById("uploadAvatarModal");
+  let preview = document.getElementById("toCropImg");
+  let files = input.files;
+    inp.addEventListener("change", e => {
+      this.previewImage(e.target);
+    });
+
+    let save = document.getElementById("save")
+    save.addEventListener('click', () => {
+      this.cropper.getCroppedCanvas().toBlob((blob) => {
+      const formData = new FormData();
+    formData.append('image', blob, inp.files[0].name);
+
+
+    let headers = new Headers({
+        "X-CSRFToken": csrftoken,
+        "Accept": 'application/json',
+
+    })
+    fetch('/api/v1/photos/', {
+      method: "PUT",
+      body: formData,
+      headers: headers,
+
+    })
+    .then(response => {
+      return response.json()
+  })
+  .then(url => {
+    let avatar = document.querySelector('.avatar')
+    avatar.style.backgroundImage = `url(${url.image})`
+  })
+  .catch(e =>{console.log(e.message)})
+}, inp.files[0].type)
+})
+  }
+
+  uploadAvatar() {
+  let btn = document.getElementById("inp-avatar");
+  btn.click();
+}
+
+  onLoadImage(reader, target, modal){
+    reader.addEventListener(
+      "load",
+      function() {
+        this.cropper
+          ? this.cropper.replace(reader.result)
+          : (target.src = reader.result);
+        modal.style.display = "block";
+      },
+      false
+    );
+
+  }
+
+  initCropper(){
+    this.cropper = null;
+    let reader = new FileReader();
+    let image = document.getElementById("toCropImg");
+    image.addEventListener("load", function(event) {
+        this.cropper = new Cropper(image, {
+            aspectRatio: 1 / 1,
+            checkCrossOrigin: false,
+            preview: ".preview-box",
+            })
+    });
+  }
+
+
+previewImage(input) {
+  console.log('here')
+  console.log(files)
+  if (files && files[0]) {
+    let reader = new FileReader();
+    this.onLoadImage(reader, preview, modal)
+    reader.readAsDataURL(files[0]);
+  }
+}
+}
+
 // ====================== Entry =============================
 
 function getData(cName) {
@@ -397,7 +500,6 @@ function getData(cName) {
 function getTemplate(url) {
   return fetch(url)
     .then(response => {
-      // console.log(respones)
       let p = response.text();
       return p;
     })
@@ -409,7 +511,7 @@ function getTemplate(url) {
 const objects = {
   profiles: {
     renderer: ProfileRenderer,
-    listeners: [FieldChangeListener]
+    listeners: [FieldChangeListener, ImageChangeListener]
   },
   jobs: {
     renderer: JobRenderer,
