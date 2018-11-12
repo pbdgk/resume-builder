@@ -4,9 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
-from app.models import Profile, Job, School, Skill
-from app.serializers import ProfileSerializer, JobSerializer, SchoolSerializer, SkillSerializer
+from app.models import Profile, Job, School, Skill, Photo
+from app.serializers import ProfileSerializer, JobSerializer, SchoolSerializer, SkillSerializer, PhotoSerializer
 
 
 class ProfileRestView(APIView):
@@ -118,3 +119,32 @@ class SkillRestView(APIView):
         skill = Skill.objects.filter(user=request.user).filter(priority=priority).first()
         serialized = SkillSerializer(skill.delete())
         return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+class PhotoRestView(APIView):
+
+    parser_classes = (MultiPartParser,)
+    def get(self, request, format=None):
+        photo = Photo.objects.filter(user=request.user).first()
+        serialized = PhotoSerializer(photo)
+        if serialized:
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, format=None):
+
+        photo = Photo.objects.get(user=request.user)
+        serialized = PhotoSerializer(photo, data=request.data, partial=True)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def put(self, request, format=None):
+        photo = Photo.objects.get(user=request.user)
+        serialized = PhotoSerializer(photo, data=request.data, partial=True)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
