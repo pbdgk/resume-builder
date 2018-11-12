@@ -1,8 +1,23 @@
+
+# javascript
 node_modules
 package-lock.json
-**/*.sqlite3
+
+# python cache files
 __pycache__
+
+# django media folder
+media/
+
+# database
+**/*.sqlite3
+
+# vs code files
 *.code-workspace
 .vscode
+
+# temp files for local tests
 *temp.*
+
+# js polyfills list to add in future
 poly.txt
