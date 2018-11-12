@@ -1,26 +1,26 @@
-'use strict'
+"use strict";
 
 // ====================== CSRF token and headers =====================
-const csrftoken = getCookie('csrftoken');
+const csrftoken = getCookie("csrftoken");
 const myHeaders = new Headers({
   "X-CSRFToken": csrftoken,
-  "Accept": "application/json",
+  Accept: "application/json",
   "Content-Type": "application/json"
 });
 
 function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = jQuery.trim(cookies[i]);
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
     }
-    return cookieValue;
+  }
+  return cookieValue;
 }
 
 // ====================== Messages ==================================
@@ -33,7 +33,6 @@ function showGoodResponse() {
   }, 1000);
 }
 
-
 // ====================== cropper init ==================================
 
 // ====================== Renderers ==================================
@@ -42,9 +41,9 @@ class BaseRenderer {
   render() {
     this.rememberContainer();
     let url = `/static/app/mst/${this.cName}.mst`;
-    let promise = getTemplate(url)
-    for (let i=0; i<this.methods.length; i++){
-      promise = promise.then(this.methods[i].bind(this))
+    let promise = getTemplate(url);
+    for (let i = 0; i < this.methods.length; i++) {
+      promise = promise.then(this.methods[i].bind(this));
     }
     promise.catch(e => {
       console.error(e);
@@ -57,8 +56,6 @@ class BaseRenderer {
       listener.listen();
     }
   }
-
-  
 
   rememberContainer() {
     this.container = document.getElementById(`${this.cName}Target`);
@@ -77,7 +74,6 @@ class MultipleRenderer extends BaseRenderer {
     var rendered = Mustache.render(template, { [this.cName]: this.data });
     $(`#${this.cName}Target`).html(rendered);
   }
-  
 }
 
 class WithDatesRenderer extends MultipleRenderer {
@@ -105,25 +101,29 @@ class WithDatesRenderer extends MultipleRenderer {
     let containers = this.container.querySelectorAll("section");
     let dateContainer, data, section;
     for (let i = 0; i < containers.length; i++) {
-        dateContainer = containers[i],
-        data = this.data[i];
-        let dateObj = {
-          start: this.parseDate(data.start),
-          end: this.parseDate(data.end)
-        };
-        for (let datePrefix in dateObj){
-          for (let datePart in dateObj[datePrefix]){
-            this.setYearAndMonth(dateContainer, datePrefix, datePart, dateObj[datePrefix][datePart])
-          }
+      (dateContainer = containers[i]), (data = this.data[i]);
+      let dateObj = {
+        start: this.parseDate(data.start),
+        end: this.parseDate(data.end)
+      };
+      for (let datePrefix in dateObj) {
+        for (let datePart in dateObj[datePrefix]) {
+          this.setYearAndMonth(
+            dateContainer,
+            datePrefix,
+            datePart,
+            dateObj[datePrefix][datePart]
+          );
         }
+      }
     }
   }
 
   setYearAndMonth(dateContainer, datePrefix, datePart, data) {
     let block, select;
-    block = dateContainer.querySelector(`[data-prefix=${datePrefix}]`)
-    select = block.querySelector(`[data-date-part=${datePart}]`)
-    this.chooseSelect(select, data)
+    block = dateContainer.querySelector(`[data-prefix=${datePrefix}]`);
+    select = block.querySelector(`[data-date-part=${datePart}]`);
+    this.chooseSelect(select, data);
   }
 
   parseDate(date) {
@@ -177,12 +177,16 @@ class ProfileRenderer extends SingleRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [this.renderTemplate, this.setAvatar,this.registerListeners]
+    this.methods = [
+      this.renderTemplate,
+      this.setAvatar,
+      this.registerListeners
+    ];
   }
 
   setAvatar() {
-    let photoBox = document.querySelector(".avatar")
-    photoBox.style.backgroundImage = `url(${this.data.photo})`
+    let photoBox = document.querySelector(".avatar");
+    photoBox.style.backgroundImage = `url(${this.data.photo})`;
   }
 }
 
@@ -192,7 +196,11 @@ class JobRenderer extends WithDatesRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [this.renderTemplate, this.manageDateFields, this.registerListeners]
+    this.methods = [
+      this.renderTemplate,
+      this.manageDateFields,
+      this.registerListeners
+    ];
   }
 }
 
@@ -202,7 +210,11 @@ class SchoolRenderer extends WithDatesRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [this.renderTemplate, this.manageDateFields, this.registerListeners]
+    this.methods = [
+      this.renderTemplate,
+      this.manageDateFields,
+      this.registerListeners
+    ];
   }
 }
 
@@ -212,20 +224,23 @@ class SkillRenderer extends WithRatingsRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [this.renderTemplate, this.manageRatingFields, this.registerListeners]
+    this.methods = [
+      this.renderTemplate,
+      this.manageRatingFields,
+      this.registerListeners
+    ];
   }
 }
-
 
 // ====================== Change Listeners =============================
 
 class BaseChangeListener {
-  constructor(container, cName){
+  constructor(container, cName) {
     this.container = container;
     this.cName = cName;
   }
-  getPriority(target){
-    let container = target.closest('section')
+  getPriority(target) {
+    let container = target.closest("section");
     return container.dataset && container.dataset.num;
   }
 }
@@ -285,17 +300,18 @@ class RatingChangeListener extends BaseChangeListener {
         method: "PUT",
         body: JSON.stringify(data),
         headers: myHeaders
-      }).then(response => {
-        if (response.status !== 200) {
-          console.log("error", response.status);
-        } else {
-          showGoodResponse();
-          console.log("SUCCESS", msg);
-        }
       })
-      .catch(e => {
-        console.log(e.message);
-      });
+        .then(response => {
+          if (response.status !== 200) {
+            console.log("error", response.status);
+          } else {
+            showGoodResponse();
+            console.log("SUCCESS", msg);
+          }
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
     });
   }
   onRatingChange() {
@@ -332,21 +348,22 @@ class DateChangeListener extends BaseChangeListener {
       method: "PUT",
       body: data,
       headers: myHeaders
-    }).then(response => {
-      if (response.status !== 200) {
-        console.log("error", response.status);
-      } else {
-        showGoodResponse();
-        console.log("SUCCESS", msg);
-      }
     })
+      .then(response => {
+        if (response.status !== 200) {
+          console.log("error", response.status);
+        } else {
+          showGoodResponse();
+          console.log("SUCCESS", msg);
+        }
+      })
       .catch(e => {
         console.log(e.message);
       });
   }
 }
 
-class FieldChangeListener extends BaseChangeListener{
+class FieldChangeListener extends BaseChangeListener {
   // TODO maybe should remove all this ids
   listen() {
     let fields = this.container.getElementsByClassName("form-field");
@@ -371,116 +388,108 @@ class FieldChangeListener extends BaseChangeListener{
       method: "PUT",
       body: JSON.stringify(data),
       headers: myHeaders
-    }).then(response => {
-      if (response.status !== 200) {
-        console.log("error", response.message);
-      } else {
-        console.log("Good");
-        showGoodResponse();
-      }
     })
+      .then(response => {
+        if (response.status !== 200) {
+          console.log("error", response.message);
+        } else {
+          console.log("Good");
+          showGoodResponse();
+        }
+      })
       .catch(e => {
         console.log(e.message);
       });
   }
 }
 
-class ImageChangeListener extends BaseChangeListener{
-  hideModal() {
-    const modal = document.getElementById("uploadAvatarModal");
-    window.addEventListener('click', event => {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    })
+class ImageChangeListener extends BaseChangeListener {
+  constructor(...args) {
+    super(args);
+    this.image = document.getElementById("toCropImg");
+    this.reader = new FileReader();
   }
-  listen(){
-    this.initCropper()
-    this.hideModal()
+
+  listen() {
+    this.onLoadImage();
+    this.onHideModal();
     let btn = document.getElementById("btn-upload-avatar");
     btn.addEventListener("click", () => {
-      this.uploadAvatar()
+      this.uploadAvatar();
     });
-    let inp = document.getElementById("inp-avatar")
-  const modal = document.getElementById("uploadAvatarModal");
-  let preview = document.getElementById("toCropImg");
-  let files = input.files;
-    inp.addEventListener("change", e => {
-      this.previewImage(e.target);
+    let inp = document.getElementById("inp-avatar");
+    let save = document.getElementById("save");
+    save.addEventListener("click", () => {
+      this.cropper.getCroppedCanvas().toBlob(blob => {
+        const formData = new FormData();
+        formData.append("image", blob, inp.files[0].name);
+        let headers = new Headers({
+          "X-CSRFToken": csrftoken,
+          Accept: "application/json"
+        });
+        fetch("/api/v1/photos/", {
+          method: "PUT",
+          body: formData,
+          headers: headers
+        })
+          .then(response => {
+            return response.json();
+          })
+          .then(url => {
+            let avatar = document.querySelector(".avatar");
+            avatar.style.backgroundImage = `url(${url.image})`;
+          })
+          .catch(e => {
+            console.log(e.message);
+          });
+      }, inp.files[0].type);
     });
-
-    let save = document.getElementById("save")
-    save.addEventListener('click', () => {
-      this.cropper.getCroppedCanvas().toBlob((blob) => {
-      const formData = new FormData();
-    formData.append('image', blob, inp.files[0].name);
-
-
-    let headers = new Headers({
-        "X-CSRFToken": csrftoken,
-        "Accept": 'application/json',
-
-    })
-    fetch('/api/v1/photos/', {
-      method: "PUT",
-      body: formData,
-      headers: headers,
-
-    })
-    .then(response => {
-      return response.json()
-  })
-  .then(url => {
-    let avatar = document.querySelector('.avatar')
-    avatar.style.backgroundImage = `url(${url.image})`
-  })
-  .catch(e =>{console.log(e.message)})
-}, inp.files[0].type)
-})
   }
 
   uploadAvatar() {
-  let btn = document.getElementById("inp-avatar");
-  btn.click();
-}
-
-  onLoadImage(reader, target, modal){
-    reader.addEventListener(
-      "load",
-      function() {
-        this.cropper
-          ? this.cropper.replace(reader.result)
-          : (target.src = reader.result);
-        modal.style.display = "block";
-      },
-      false
-    );
-
+    let btn = document.getElementById("inp-avatar");
+    btn.click();
   }
 
-  initCropper(){
-    this.cropper = null;
-    let reader = new FileReader();
-    let image = document.getElementById("toCropImg");
-    image.addEventListener("load", function(event) {
-        this.cropper = new Cropper(image, {
-            aspectRatio: 1 / 1,
-            checkCrossOrigin: false,
-            preview: ".preview-box",
-            })
+  initCropperInstance() {
+    const image = this.image;
+    this.cropper = new Cropper(image, {
+      aspectRatio: 1 / 1,
+      checkCrossOrigin: false,
+      preview: ".preview-box"
     });
   }
 
-
-previewImage(input) {
-  console.log('here')
-  console.log(files)
-  if (files && files[0]) {
-    let reader = new FileReader();
-    this.onLoadImage(reader, preview, modal)
-    reader.readAsDataURL(files[0]);
+  hideModal(event) {
+    const modal = document.getElementById("uploadAvatarModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
   }
-}
+
+  onHideModal() {
+    window.addEventListener("click", this.hideModal);
+  }
+  
+  onLoadImage() {
+    let btn = document.getElementById("inp-avatar");
+    btn.addEventListener("change", e => {
+      let file = e.target.files && e.target.files[0];
+      const modal = document.getElementById("uploadAvatarModal");
+      modal.style.display = "block";
+      this.reader.onloadend = () => {
+        if (this.cropper) {
+          this.cropper.replace(this.reader.result);
+        } else {
+          this.image.src = this.reader.result;
+          this.initCropperInstance();
+        }
+      };
+      if (file) {
+        this.reader.readAsDataURL(file);
+      }
+    });
+  }
 }
 
 // ====================== Entry =============================
@@ -489,7 +498,7 @@ function getData(cName) {
   let url = `http://127.0.0.1:8000/api/v1/${cName}/`;
   return fetch(url)
     .then(response => {
-      return response.json()
+      return response.json();
     })
     .catch(e => {
       console.log(e.message);
@@ -530,11 +539,11 @@ const objects = {
 ["profiles", "jobs", "schools", "skills"].forEach(cName => {
   getData(cName)
     .then(data => {
-    render(cName, data);
+      render(cName, data);
     })
     .catch(e => {
-      console.log(e.message)
-    })
+      console.log(e.message);
+    });
 });
 
 function render(cName, data) {
