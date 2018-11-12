@@ -1,12 +1,19 @@
 from rest_framework import serializers
 
-from .models import Profile, Job, School, Skill
+from .models import Profile, Job, School, Skill, Photo
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+
+    photo = serializers.SerializerMethodField()
+
+    def get_photo(serf, obj):
+        photo = Photo.objects.get(user=obj.user)
+        return photo.image.url
+
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'profession')
+        fields = ('first_name', 'last_name', 'profession', 'photo')
 
 
 class JobSerializer(serializers.ModelSerializer):
@@ -27,6 +34,29 @@ class SkillSerializer(serializers.ModelSerializer):
         fields = ('name', 'rating', 'priority')
 
 
+
+# class PhotoSerializer(serializers.Serializer):
+#     image = serializers.ImageField()
+
+
+#     def create(self, validated_data):
+#         print(validated_data)
+#         return Photo(**validated_data)
+    
+
+#     def update(self, instance, validated_data):
+#         instance.image = validated_data.get('image', instance.image)
+#         return instance
+
+
+
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+    class Meta:
+        model = Photo
+        fields = ('image',)
 # class PersonalDataSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model PersonalData

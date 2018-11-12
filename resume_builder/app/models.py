@@ -11,12 +11,6 @@ class Profile(models.Model):
     profession = models.CharField(max_length=255, blank=True)
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def build_profile_on_user_creation(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance)
-
-
 class Job(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     position = models.CharField(max_length=255, blank=True, default="")
@@ -100,30 +94,13 @@ class Skill(models.Model):
                 obj.save()
 
 
-# class Photo(models.Model):
-#     owner = models.ForeignKey('auth.User', related_name='image')
-#     image = models.ImageField(upload_to='photos')
+class Photo(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='photos', default='photos/photo.png')
 
 
-# class ResumeData(models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     profile =
-
-# class PersonalData(models.Model):
-#     user = models.ManyToManyField(settings.AUTH_USER_MODEL)
-#     phone = models.CharField(max_length=18, blank=True, default="")
-#     email = models.EmailField(blank=True, default="")
-#     birthday = models.DateField(blank=True, default="")
-
-
-# class SocialData(models.Model):
-#     user = models.ManyToManyField(settings.AUTH_USER_MODEL)
-#     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-#     img_class = models.CharField(max_length=255)
-#     link = models.URLField(max_length=255, blank=True, default="")
-
-# class Languange(models.Model):
-#     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=255)
-#     stars = models.IntegerField()
-#
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def build_profile_on_user_creation(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user=instance)
+        Photo.objects.get_or_create(user=instance)
