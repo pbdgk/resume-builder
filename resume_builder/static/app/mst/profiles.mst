@@ -26,7 +26,7 @@
         <div class="btn-photo" id="btn-upload-avatar">
         <i class="fas fa-cloud-upload-alt"></i>
         Change Photo
-        <input type="file" name="avatar" onchange="previewImage(this)" id="inp-avatar" style="display:none">
+        <input type="file" name="avatar" id="inp-avatar" style="display:none">
         </div>
     </div>
     </div>
