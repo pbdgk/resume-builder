@@ -1,0 +1,15 @@
+{{ #socials }}
+
+<div class="field c12">
+    <label class="form-label">{{ label }}</label>
+    <div class="ifield">
+    <span class="date-select-icon">
+        <i class="{{ fa_image_class }}"></i>
+    </span>
+    <div class="new_form-field">
+        <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ field_name }}">
+    </div>
+    </div>
+</div>
+
+{{ /socials }}

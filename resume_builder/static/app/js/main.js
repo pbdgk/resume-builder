@@ -190,6 +190,19 @@ class ProfileRenderer extends SingleRenderer {
   }
 }
 
+class SocialRenderer extends MultipleRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [
+      this.renderTemplate,
+      this.registerListeners
+    ];
+  }
+}
+
 class JobRenderer extends WithDatesRenderer {
   constructor(data, cName, listeners) {
     super();
@@ -522,6 +535,10 @@ const objects = {
     renderer: ProfileRenderer,
     listeners: [FieldChangeListener, ImageChangeListener]
   },
+  socials: {
+    renderer: SocialRenderer,
+    listeners: [FieldChangeListener]
+  },
   jobs: {
     renderer: JobRenderer,
     listeners: [FieldChangeListener, DateChangeListener]
@@ -536,7 +553,7 @@ const objects = {
   }
 };
 
-["profiles", "jobs", "schools", "skills"].forEach(cName => {
+["profiles", "socials", "jobs", "schools", "skills"].forEach(cName => {
   getData(cName)
     .then(data => {
       render(cName, data);
