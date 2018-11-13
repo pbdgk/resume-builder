@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Profile, Job, School, Skill, Photo
+from .models import Profile, Job, School, Skill, Photo, Socials
 
-# Register your models here.
-admin.site.register(Profile)
-admin.site.register(Job)
-admin.site.register(School)
-admin.site.register(Skill)
-admin.site.register(Photo)
+
+project_models = (Profile, Job, School, Skill, Photo, Socials)
+
+for project_model in project_models:
+    admin.site.register(project_model)
