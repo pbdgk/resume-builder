@@ -1,5 +1,7 @@
 "use strict";
 
+const EMAIL_RE_PATTERN = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const GITHUB_RE_PATTERN = /^https?:\/\/github\.com/;
 // ====================== CSRF token and headers =====================
 const csrftoken = getCookie("csrftoken");
 const myHeaders = new Headers({
@@ -190,6 +192,19 @@ class ProfileRenderer extends SingleRenderer {
   }
 }
 
+class SummaryRenderer extends SingleRenderer {
+  constructor(data, cName, listeners) {
+    super();
+    this.data = data;
+    this.cName = cName;
+    this.listeners = listeners;
+    this.methods = [
+      this.renderTemplate,
+      this.registerListeners
+    ];
+  }
+}
+
 class SocialRenderer extends MultipleRenderer {
   constructor(data, cName, listeners) {
     super();
@@ -200,6 +215,10 @@ class SocialRenderer extends MultipleRenderer {
       this.renderTemplate,
       this.registerListeners
     ];
+  }
+  renderTemplate(template) {
+    var rendered = Mustache.render(template, {...this.data});
+    $(`#${this.cName}Target`).html(rendered);
   }
 }
 
@@ -535,6 +554,10 @@ const objects = {
     renderer: ProfileRenderer,
     listeners: [FieldChangeListener, ImageChangeListener]
   },
+  summaries: {
+    renderer: SummaryRenderer,
+    listeners: [FieldChangeListener]
+  },
   socials: {
     renderer: SocialRenderer,
     listeners: [FieldChangeListener]
@@ -553,7 +576,8 @@ const objects = {
   }
 };
 
-["profiles", "socials", "jobs", "schools", "skills"].forEach(cName => {
+
+["profiles", "summaries", "socials", "jobs", "schools", "skills"].forEach(cName => {
   getData(cName)
     .then(data => {
       render(cName, data);
@@ -567,4 +591,54 @@ function render(cName, data) {
   let { renderer, listeners } = objects[cName];
   let r = new renderer(data, cName, listeners);
   r.render();
+}
+
+
+
+const gh = {
+  label: 'Github',
+  value: '',
+  field_type: 'text',
+  fa_image_class: "fab fa-github",
+  field_name: 'github',
+  priority: 0,
+  validate: function(){
+    return this.value
+      ? this.value.match(GITHUB_RE_PATTERN)
+      : true
+  }
+}
+
+const SOCIALS = {
+  'Github': gh,
+}
+
+
+
+let github = (target) => {
+  const label = target.childNodes[3].dataset.label
+  const social = SOCIALS[label]
+  addSocial(social)
+}
+
+
+function addSocial(target) {
+  const url = `http://127.0.0.1:8000/api/v1/socials/`;
+  fetch(url, {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify(target)
+  })
+  .then(response => {
+    return response.json()
+  })
+  .catch(e => {
+    console.log(e.message)
+  })
+}
+
+
+
+class SocialField {
+
 }
