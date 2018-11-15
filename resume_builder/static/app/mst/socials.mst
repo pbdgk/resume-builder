@@ -1,15 +1,41 @@
-{{ #socials }}
+<section class="panel">
+  <div class="form">
+    <div class="field form-heading c12">
+      <h4>Group #1</h4>
+      <span>Add field</span>
+    </div>
 
-<div class="field c12">
+    {{ #firstGroup }}
+    <div class="field c12">
+      <label class="form-label">{{ label }}</label>
+      <div class="ifield">
+        <span class="date-select-icon">
+            <i class="{{ fa_image_class }}"></i>
+        </span>
+        <div class="new_form-field">
+          <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ field_name }}">
+        </div>
+      </div>
+    </div>
+    {{ /firstGroup }}
+<div class="form">
+  <div class="field form-heading c12">
+    <h4>Group #2</h4>
+    <span>Add field</span>
+  </div>
+
+  {{ #secondGroup }}
+  <div class="field c12">
     <label class="form-label">{{ label }}</label>
     <div class="ifield">
-    <span class="date-select-icon">
+      <span class="date-select-icon">
         <i class="{{ fa_image_class }}"></i>
-    </span>
-    <div class="new_form-field">
+      </span>
+      <div class="new_form-field">
         <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ field_name }}">
+      </div>
     </div>
-    </div>
+  </div>
+  {{ /secondGroup }}
 </div>
-
-{{ /socials }}
+</section>
