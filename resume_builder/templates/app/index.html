@@ -64,71 +64,62 @@
       <button id="myBtn">Modal</button>
     </div>
 
-    <main>
+
+    <div class="new-field-section">
+    <!-- <div class="modal" style="display:block"> -->
+    <div class="modal" style="display:none">
+      <div class="modal-wrapper">
+        <div class="modal-header">
+          <h3>Choose Field</h3>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div class="modal-content">
+          <div class="wrapper">
+            <ul>
+              <li onclick="github(this)" class="social-field">
+                <span></span>
+                <span data-label='Github'>Github</span>
+              </li>
+              <li class="social-field">
+                <span></span>
+                <span>Instagram</span>
+              </li>
+              <li class="social-field">
+                <span></span>
+                <span>Youtube</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-btn-wrapper">
+            <button id="save" class="btn-modal btn-save">Save</button>
+            <button class="btn-modal btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    </div>
+
+
+
+
+
+
+
+    <main style="display: block">
       <div class="container">
         <div id="profilesTarget">Loading...</div>
       </div>
 
       <div class="container">
-        <section class="panel">
-          <div class="form" data-n="personal">
-            <div class="field form-heading c12">
-              <h4>Column 1</h4>
-              <span>Add field</span>
-            </div>
-            <div id="socialsTarget"></div>
-          </div>
-
-
-          <div class="form" data-n="social">
-
-            <div class="field form-heading c12">
-              <h4>Column 2</h4>
-              <span onclick="addField()">Add field</span>
-            </div>
-            <div class="field c12">
-              <label class="form-label">Facebook</label>
-              <div class="ifield">
-                <span class="date-select-icon">
-                  <i class="fab fa-facebook-f"></i>
-                </span>
-                <div class="new_form-field">
-                  <input class="form-field" type="text" name="facebook">
-                </div>
-              </div>
-            </div>
-
-            <div class="field c12">
-              <label class="form-label">Linkedin</label>
-              <div class="ifield">
-                <span class="date-select-icon">
-                  <i class="fab fa-linkedin-in"></i>
-                </span>
-                <div class="new_form-field">
-                  <input class="form-field" type="text" name="linkedin">
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
+        <div id="socialsTarget">Loading...</div>
       </div>
 
       <div class="container">
-        <section class="panel">
-          <div class="form" data-n="summary">
-            <div class="field form-heading c12">
-              <h4>Summary</h4>
-            </div>
-            <div class="field c12">
-              <div class="new_form-field">
-                <textarea class="form-field" name="summary" rows="5"></textarea>
-              </div>
-            </div>
-          </div>
-
-
-        </section>
+        <div id="summariesTarget">Loading...</div>
       </div>
 
       <div class="container">

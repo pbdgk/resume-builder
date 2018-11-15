@@ -1,0 +1,12 @@
+<section class="panel">
+    <div class="form" data-n="summary">
+    <div class="field form-heading c12">
+        <h4>Summary</h4>
+    </div>
+    <div class="field c12">
+        <div class="new_form-field">
+        <textarea class="form-field" name="text" rows="5">{{ text }}</textarea>
+        </div>
+    </div>
+    </div>
+</section>
