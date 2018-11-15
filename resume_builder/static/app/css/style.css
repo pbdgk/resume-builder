@@ -437,3 +437,17 @@ ul {
   background: #515d6b;
 }
 /*  ================= END DATE SELECT ================== */
+
+
+/*  ================= SOCIAL FIELDS ================== */
+
+.social-field {
+  float: left;
+  width: 127px;
+  margin: 5px;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+
+/*  ================= END SOCIAL FIELDS ================== */
