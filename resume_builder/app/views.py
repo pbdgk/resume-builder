@@ -6,3 +6,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     context = {}
     return render(request, 'app/index.html', context)
+
+
+def preview(request):
+    return render(request, 'app/preview.html')
