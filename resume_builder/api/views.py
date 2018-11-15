@@ -6,8 +6,17 @@ from rest_framework import status
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
-from app.models import Profile, Job, School, Skill, Photo, Socials
-from app.serializers import ProfileSerializer, JobSerializer, SchoolSerializer, SkillSerializer, PhotoSerializer, SocialSerializer
+from app.models import Profile, Summary, Job, School, Skill, Photo, Socials
+from app.serializers import (ProfileSerializer,
+                             SummarySerializer,
+                             JobSerializer,
+                             SchoolSerializer,
+                             SkillSerializer,
+                             PhotoSerializer,
+                             SocialSerializer,
+                             GetSocialSerializer,
+                             DocSerializer,
+                            )
 
 
 class ProfileRestView(APIView):
@@ -23,6 +32,25 @@ class ProfileRestView(APIView):
     def put(self, request, format=None):
         profile = Profile.objects.get(user=request.user)
         serialized = ProfileSerializer(profile, data=request.data, partial=True)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SummaryRestView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        summary = Summary.objects.get(user=request.user)
+        serialized = SummarySerializer(summary)
+        if serialized:
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, format=None):
+        summary = Summary.objects.get(user=request.user)
+        serialized = SummarySerializer(summary, data=request.data, partial=True)
         if serialized.is_valid():
             serialized.save()
             return Response(serialized.data, status=status.HTTP_200_OK)
@@ -152,9 +180,19 @@ class PhotoRestView(APIView):
 
 class SocialRestView(APIView):
 
+    def post(self, request, format=None):
+        user = request.user
+        data = request.data
+        data.update({ "user": user.pk })
+        serialized = SocialSerializer(data=data)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+
     def get(self, request, format=None):
         social = Socials.objects.filter(user=request.user)
-        serialized = SocialSerializer(social, many=True)
+        serialized = GetSocialSerializer(social)
         if serialized:
             return Response(serialized.data, status=status.HTTP_200_OK)
         return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
@@ -168,3 +206,59 @@ class SocialRestView(APIView):
             serialized.save()
             return Response(serialized.data, status=status.HTTP_200_OK)
         return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+class DocRestView(APIView):
+
+    def get(self, request, format=None):
+        user = request.user
+
+        profile = Profile.objects.get(user=user)
+        profile_ser = ProfileSerializer(profile)
+
+        img = Photo.objects.get(user=user)
+        img_ser = PhotoSerializer(img)
+
+        summary = Summary.objects.get(user=user)
+        summary_ser = SummarySerializer(summary)
+
+        socials = Socials.objects.filter(user=user)
+        socials_ser = GetSocialSerializer(socials)
+
+        education = School.objects.filter(user=user)
+        edu_ser = SchoolSerializer(education, many=True)
+
+        jobs = Job.objects.filter(user=user)
+        jobs_ser = JobSerializer(jobs, many=True)
+
+        skills = Skill.objects.filter(user=user)
+        skills_ser = SkillSerializer(skills, many=True)
+
+        d = {
+            "profile": profile_ser.data,
+            "img": img_ser.data,
+            "socials": socials_ser.data,
+            "summary": summary_ser.data,
+            "exp": jobs_ser.data,
+            "edu": edu_ser.data,
+            "skills": skills_ser.data,
+            }
+        return Response(d, status.HTTP_200_OK)
+
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
+class Download(APIView):
+
+    def post(self, request, format=None):
+        data = request.data
+        import pdfkit
+        from django.conf import settings
+        import os
+        base = settings.BASE_DIR
+        out = os.path.join(base, 'api/out.pdf')
+        css = os.path.join(base, 'static/app/css/preview.css') 
+        pdf = pdfkit.from_string(data, out, css=css)
+        # print(pdf)
+        # response = HttpResponse(pdf, content_type='application/pdf') 
+        # return response
+        return Response(status.HTTP_200_OK)

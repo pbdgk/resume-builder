@@ -11,6 +11,10 @@ class Profile(models.Model):
     profession = models.CharField(max_length=255, blank=True)
 
 
+class Summary(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.TextField(blank=True, default="")
+
 class Job(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     position = models.CharField(max_length=255, blank=True, default="")
@@ -107,6 +111,7 @@ class Socials(models.Model):
     fa_image_class = models.CharField(max_length=100)
     field_name = models.CharField(max_length=50)
     priority = models.IntegerField(blank=True)
+    group = models.SmallIntegerField(default=1)
     
     def save(self, *args, **kwargs):
         if self.priority is None:
@@ -137,6 +142,7 @@ DEFAULT_SOCIALS_FIELDS = (
     "fa_image_class": "fas fa-mobile-alt",
     "field_name": "phone",
     "priority": 1,
+    "group": 1
     },
 
     {
@@ -145,6 +151,7 @@ DEFAULT_SOCIALS_FIELDS = (
     "fa_image_class": "far fa-envelope",
     "field_name": "email",
     "priority": 2,
+    "group": 1
     },
 
     {
@@ -153,6 +160,7 @@ DEFAULT_SOCIALS_FIELDS = (
     "fa_image_class": "fas fa-birthday-cake",
     "field_name": "birthday",
     "priority": 3,
+    "group": 1
     },
 )
 
@@ -161,5 +169,6 @@ def build_profile_on_user_creation(sender, instance, created, **kwargs):
     if created:
         Profile.objects.get_or_create(user=instance)
         Photo.objects.get_or_create(user=instance)
+        Summary.objects.get_or_create(user=instance)
         for personal_info in DEFAULT_SOCIALS_FIELDS:
             Socials.objects.create(user=instance, **personal_info)
