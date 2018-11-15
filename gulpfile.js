@@ -1,7 +1,5 @@
-var gulp = require('gulp'),
-  connect = require('gulp-connect'),
-  livereload = require('gulp-livereload');
-
+const gulp = require('gulp'),
+  connect = require('gulp-connect')
 
 gulp.task('connect', function() {
   connect.server({
@@ -23,9 +21,9 @@ gulp.task('css', function() {
     .pipe(connect.reload());
 });
 
-
 gulp.task('watch', function () {
   gulp.watch(['./frontend/**/*.html', './frontend/**/*.css'], ['html']);
 });
 
 gulp.task('default', ['connect', 'watch']);
+ 
