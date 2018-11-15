@@ -56,7 +56,7 @@ class Builder {
     this.createPage();
     this.buildFirstSection();
     this.buildSummary();
-    this.buildSummary();
+    this.buildExperience();
     this.buildEducation();
     this.buildSkills();
   }
@@ -144,11 +144,20 @@ class Builder {
   }
 
   buildSummary() {
-    const section = this.createEntry();
-    const contentContainer = this.createDataContainer(section);
+    let section = this.createEntry();
+    let contentContainer = this.createDataContainer(section);
     const ps = this.textToParagraphs(this.doc.summary.text);
     for (let p of ps) {
       contentContainer.appendChild(p);
+      if (this.checkEndOfPage(p)){
+        let page = this.createPage();
+        section = this.createEntry();
+        page.appendChild(section);
+        contentContainer = this.createDataContainer(section);
+        section.appendChild(contentContainer);
+        p.remove()
+        contentContainer.appendChild(p)
+      }
     }
   }
 
@@ -190,6 +199,7 @@ class Builder {
           p.remove();
           this.createPage();
           section = this.createEntry();
+          console.log(section)
           contentContainer = this.createDataContainer(section);
           subject = this.createWrappedSubjectEntry(contentContainer);
           subject.appendChild(p);
@@ -217,7 +227,7 @@ class Builder {
 
   checkEndOfPage(element) {
     let lastPage = this.getLastPage();
-    const y_page = lastPage.getBoundingClientRect().bottom - 30;
+    const y_page = lastPage.getBoundingClientRect().bottom - 30 - 30;
     const y_e = element.getBoundingClientRect().bottom;
     // return y_e > y_page
     if (y_e > y_page) {
