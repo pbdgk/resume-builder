@@ -43,30 +43,7 @@ function send(e){
     console.log(e)
   })
 }
-const appendEntry = (parent, entry) => {
-  parent.appendChild(entry);
-};
-
-const generate = (num, el) => {
-  const arr = []
-  for (let i=0; i < num; i++) {
-    arr.push(document.createElement(el))
-  }
-  return arr;
-}
-
-// let ip = container.querySelector(".page-inner");
-// for (let i = 0; i < 10; i++) {
-//   let div = document.createElement('div');
-//   ip.appendChild(div);
-//   for (let i = 0; i < 10; i++) {
-//     p = document.createElement('p')
-//     div.appendChild(p)
-//   }
-// }
-
 // 150 km 1300 - 1400 grn
-
 
 class Builder {
   constructor(doc) {
