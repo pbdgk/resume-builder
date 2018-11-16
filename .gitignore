@@ -2,6 +2,7 @@
 # javascript
 node_modules
 package-lock.json
+.eslintrc.js
 
 # python cache files
 __pycache__
@@ -18,6 +19,7 @@ media/
 
 # temp files for local tests
 *temp.*
+frontend/
 
 # js polyfills list to add in future
 poly.txt
