@@ -63,10 +63,12 @@ class Builder {
   }
 
   build() {
-    this.currentPage = this.createPage()
-    this.renderSpace(1130);
+    this.createPage();
+    this.renderSpace(1000);
+    this.buildFirstSection();
+    this.buildSummary();
     // this.buildExperience();
-    this.buildEducation()
+    this.buildEducation();
   }
 
   createPage() {
@@ -78,14 +80,14 @@ class Builder {
   }
 
   buildFirstSection() {
-    const section = this.createEntry()
+    this.createEntry()
     const title = this.createNode("div", ["title-col", "first-line-col"]);
-    section.appendChild(title);
+    this.currentSection.appendChild(title);
     const { profile, img, socials } = this.doc;
 
     this.buildHeader(profile, title)
     this.buildSocials(socials, title);
-    this.buildPhotoSection(img, section)
+    this.buildPhotoSection(img, this.currentSection)
   }
 
   buildHeader(profile, parent){
@@ -143,13 +145,14 @@ class Builder {
   }
   
   buildSummary() {
-    let section = this.createEntry();
-    let contentContainer = this.createDataContainer(section);
-    const ps = this.textToParagraphs(this.doc.summary.text);
+    const summary_text = this.doc.summary.text;
+    this.createEntry();
+    this.createDataContainer();
+    const ps = this.textToParagraphs(summary_text);
     for (let p of ps) {
-      contentContainer.appendChild(p);
+      this.currentContent.appendChild(p);
       if (this.checkEndOfPage(p)){
-        contentContainer = this.manageParapraphWrap(p)
+        this.manageParapraphWrap(p)
       }
     }
   }
@@ -333,9 +336,16 @@ class Builder {
   manageSubjectWrap(el){
     this.createPage()
     this.createEntry()
-    this.createDataContainer(this.currentSection)
-    this.createWrappedSubjectEntry(this.currentContent)
+    this.createDataContainer()
+    this.createWrappedSubjectEntry()
     this._removeTo(el, this.currentSubject)
+  }
+
+  manageParapraphWrap(p){
+    this.createPage();
+    this.createEntry();
+    this.createDataContainer();
+    this._removeTo(p, this.currentContent)
   }
 
   checkEndOfPage(element) {
@@ -421,13 +431,6 @@ class Builder {
 
   
 
-  manageParapraphWrap(p){
-    this.createPage();
-    const section = this.createEntry();
-    const contentContainer = this.createDataContainer(section);
-    this._removeTo(p, contentContainer)
-    return contentContainer;
-  }
 
 
 
