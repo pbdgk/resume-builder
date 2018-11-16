@@ -53,25 +53,27 @@ class Builder {
     this.container = document.querySelector(".page-container");
   }
 
+  renderSpace(h){
+    const child = this.createNode('div')
+    child.style.height = h + 'px';
+    child.style.width = '100%';
+    child.style.backgroundColor = "blue";
+    console.log(child)
+    this.currentPage.appendChild(child) 
+  }
+
   build() {
-    this.createPage();
-    this.buildFirstSection();
-    this.buildSummary();
-    this.buildSummary();
-    this.buildSummary();
-    this.buildSummary();
-    this.buildSkills();
-    this.buildSkills();
-    this.buildSkills();
-    this.buildSummary();
+    this.currentPage = this.createPage()
+    this.renderSpace(1130);
     this.buildExperience();
-    this.buildSkills();
+    this.buildExperience();
   }
 
   createPage() {
     const page = this.createNode("div", "page");
     this.pages.push(page);
     this.container.appendChild(page);
+    this.currentPage = page;
     return page;
   }
 
@@ -174,37 +176,187 @@ class Builder {
     }
   }
 
+  renderJob(job){
+    this.createDataContainer();
+    this.createDateEntry(job);
+    this.createSubjectEntry(job);
+    this.createSubTitleEntry(job);
+    this.createParagraphsEntry(job.experience);
+
+
+  }
+
   buildExperience() {
     const exp = this.doc.exp;
-    let section = this.createTitleEntry("Experience");
+    this.createTitleEntry("Experience");
     for (let i = 0; i < exp.length; i++) {
       let job = exp[i];
+      this.renderJob(job)
 
-      let contentContainer = this.createDataContainer(section);
 
-      try {
-        this.createDateEntry(contentContainer, job.start, job.end);
-      } catch (err) {
-        section = err.section;
-      }
-      let subject;
-      try {
-        subject = this.createSubjectEntry(contentContainer, job.position);
-      } catch (err) {
-        section  = err.section;
-        subject = err.subject;
-      }
-      subject = this.createSubTitleEntry(subject, job.company)
-      console.log('sibj', subject)
-      const ps = this.textToParagraphs(job.experience);
-      for (let p of ps) {
-        subject.appendChild(p);
-        if (this.checkEndOfPage(subject)) {
-          subject = this.manageSubjectWrap(p);
-        }
-      }
+
+
+
+    // let section = this.createTitleEntry("Experience");
+    // for (let i = 0; i < exp.length; i++) {
+    //   let job = exp[i];
+
+    //   let contentContainer = this.createDataContainer(section);
+
+    //   try {
+    //     this.createDateEntry(contentContainer, job.start, job.end);
+    //   } catch (err) {
+    //     section = err.section;
+    //   }
+    //   let subject;
+    //   try {
+    //     subject = this.createSubjectEntry(contentContainer, job.position);
+    //   } catch (err) {
+    //     section  = err.section;
+    //     subject = err.subject;
+    //   }
+    //   subject = this.createSubTitleEntry(subject, job.company)
+    //   console.log('sibj', subject)
+    //   const ps = this.textToParagraphs(job.experience);
+    //   for (let p of ps) {
+    //     subject.appendChild(p);
+    //     if (this.checkEndOfPage(subject)) {
+    //       subject = this.manageSubjectWrap(p);
+    //     }
+    //   }
+    // }
+  }
+}
+
+  createEntry() {
+    const row = this.createSectionSkillet();
+    this.currentPage.appendChild(row);
+    this.currentSection = row.children[0]
+
+  }
+
+  createTitleEntry(name) {
+    this.createEntry()
+    const title = this.createNode("div", "title");
+    this.currentSection.appendChild(title);
+    title.innerHTML = name;
+    if (this.checkEndOfPage(this.currentSection)) {
+      this.currentPage = this.createPage();
+      this._removeTo(this.currentSection.parentNode, this.currentPage)
     }
   }
+
+  createDataContainer() {
+    // mb current section could not exist
+    const col = this.createNode("div", "col");
+    this.currentSection.appendChild(col);
+    const content = this.createNode("div", "content");
+    col.appendChild(content);
+    this.currentContent = content;
+  }
+
+  createDateEntry(obj) {
+    const dates = this.createNode("div", ["dates", "inline-b"]);
+    const dateFrom = this.createNode("span", "date-from");
+    const dateTo = this.createNode("span", "date-to");
+    this.currentContent.appendChild(dates)
+    dates.appendChild(dateFrom);
+    dates.appendChild(dateTo);
+    dateFrom.innerHTML = obj.start;
+    dateTo.innerHTML = obj.end;
+    console.log(this.currentSection, this.currentContent, this.currentSubject)
+
+    if (this.checkEndOfPage(this.currentContent)) {
+      this.manageContentContainerWrap(this.currentContent);
+    }
+  }
+  
+  createSubjectEntry(obj) {
+    const subject = this.createNode("div", ["subject", "inline-b"]);
+    this.currentSubject = subject;
+    this.currentContent.appendChild(subject);
+    const name = this.createNode("h5");
+    subject.appendChild(name);
+    name.innerHTML = obj.position;
+    if (this.checkEndOfPage(this.currentContent)) {
+        this.manageContentContainerWrap(this.currentContent);
+    }
+  }
+
+  createWrappedSubjectEntry() {
+    // TODO: mb change subject-wrapper to left-offset, also add it to raigin-row
+    this.currentSubject = this.createNode("div", [
+      "subject",
+      "subject-wrapped",
+      "inline-b"
+    ]);
+    this.currentContent.appendChild(this.currentSubject);
+  }
+  createSubTitleEntry(obj){
+    const companyTitle = this.createNode('p', 'subtitle')
+    companyTitle.innerHTML = obj.company;
+    this.currentSubject.appendChild(companyTitle)
+    if (this.checkEndOfPage(companyTitle)){
+      return this.manageSubjectWrap(companyTitle)
+    }
+  }
+
+  createParagraphsEntry(data){
+      const ps = this.textToParagraphs(data);
+      for (let p of ps) {
+        this.currentSubject.appendChild(p);
+        if (this.checkEndOfPage(this.currentSubject)) {
+          this.manageSubjectWrap(p);
+        }
+  }
+}
+
+  manageContentContainerWrap(){
+      this.createPage();
+      this.createEntry();
+      this._removeTo(this.currentContent, this.currentSection);
+
+  }
+
+  manageSubjectWrap(el){
+    this.createPage()
+    this.createEntry()
+    this.createDataContainer(this.currentSection)
+    this.createWrappedSubjectEntry(this.currentContent)
+    this._removeTo(el, this.currentSubject)
+  }
+
+  checkEndOfPage(element) {
+    let lastPage = this.getLastPage();
+
+    const y_page = lastPage.getBoundingClientRect().bottom - PAGE_MARGIN_BOTTOM - PAGE_OFFSET_BOTTOM;
+    const y_element = element.getBoundingClientRect().bottom;
+    // console.log(y_element, y_page, element) 
+    if (y_element > y_page){
+      console.log(y_element, y_page, element) 
+    }
+    return y_element > y_page
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   buildSkills() {
     const skills = this.doc.skills;
@@ -251,65 +403,11 @@ class Builder {
     }
   }
 
-  createDateEntry(contentContainer, start, end) {
-    const dates = this.createNode("div", ["dates", "inline-b"]);
-    const dateFrom = this.createNode("span", "date-from");
-    const dateTo = this.createNode("span", "date-to");
-    contentContainer.appendChild(dates);
-    dates.appendChild(dateFrom);
-    dates.appendChild(dateTo);
-    dateFrom.innerHTML = start;
-    dateTo.innerHTML = end;
 
-    if (this.checkEndOfPage(contentContainer)) {
-      console.log('!!!!!', contentContainer)
-      this.manageContentContainerWrap(contentContainer);
-    }
-  }
 
-  createSubTitleEntry(subject, companyName){
-    const companyTitle = this.createNode('p', 'subtitle')
-    companyTitle.innerHTML = companyName;
-    subject.appendChild(companyTitle)
-    if (this.checkEndOfPage(companyTitle)){
-      return this.manageSubjectWrap(companyTitle)
-    }
-    return subject;
-  }
 
-  // createSubjectWithSubtitleEntry(contentContainer, companyName, text){
-  //   try{
-  //     let subject = this.createSubjectEntry(contentContainer, text)
-  //   } finally{
 
-  //   }
-  //     const companyTitle = this.createNode('p')
-  //     companyTitle.innerHTML = companyName;
-  //     subject.appendChild(companyTitle)
-  //     if (this.checkEndOfPage(subject)){
-  //       console.log('sfdsfsd')
-  //       this.manageContentContainerWrap(subject)
-  //     }
-  //     return subject;
-  // }
-
-  createSubjectEntry(contentContainer, text) {
-    const subject = this.createNode("div", ["subject", "inline-b"]);
-    contentContainer.appendChild(subject);
-    const name = this.createNode("h5");
-    subject.appendChild(name);
-    name.innerHTML = text;
-    if (this.checkEndOfPage(contentContainer)) {
-      try {
-        this.manageContentContainerWrap(contentContainer);
-      } catch (err){
-        err.subject = subject;
-        throw err
-      }
-    }
-    return subject;
-  }
-
+  
 
   manageParapraphWrap(p){
     this.createPage();
@@ -319,75 +417,15 @@ class Builder {
     return contentContainer;
   }
 
-  manageSubjectWrap(el){
-    this.createPage()
-    const section = this.createEntry()
-    const contentContainer = this.createDataContainer(section)
-    let subject = this.createWrappedSubjectEntry(contentContainer)
-    this._removeTo(el, subject)
-    return subject;
-  }
 
-  manageContentContainerWrap(contentContainer){
-      this.createPage();
-      const section = this.createEntry();
-      this._removeTo(contentContainer, section);
-      throw new ContentContainerWrapException(section);
 
-  }
 
-  createWrappedSubjectEntry(contentContainer) {
-    // TODO: mb change subject-wrapper to left-offset, also add it to raigin-row
-    const subject = this.createNode("div", [
-      "subject",
-      "subject-wrapped",
-      "inline-b"
-    ]);
-    contentContainer.appendChild(subject);
-    return subject;
-  }
-
-  checkEndOfPage(element) {
-    let lastPage = this.getLastPage();
-
-    const y_page = lastPage.getBoundingClientRect().bottom - PAGE_MARGIN_BOTTOM - PAGE_OFFSET_BOTTOM;
-    const y_element = element.getBoundingClientRect().bottom;
-    // console.log(y_element, y_page, element) 
-    if (y_element > y_page){
-      console.log(y_element, y_page, element) 
-    }
-    return y_element > y_page
-  }
   getLastPage() {
     return this.pages[this.pages.length - 1];
   }
 
-  createTitleEntry(name) {
-    const section = this.createEntry()
-    const title = this.createNode("div", "title");
-    section.appendChild(title);
-    title.innerHTML = name;
-    if (this.checkEndOfPage(section)) {
-      const page = this.createPage();
-      this._removeTo(section.parentNode, page)
-    }
-    return section;
-  }
 
-  createEntry() {
-    const row = this.createSectionSkillet();
-    const page = this.getLastPage();
-    page.appendChild(row);
-    return row.children[0];
-  }
 
-  createDataContainer(section) {
-    const col = this.createNode("div", "col");
-    section.appendChild(col);
-    const content = this.createNode("div", "content");
-    col.appendChild(content);
-    return content;
-  }
 
   textToParagraphs(text) {
     const paragraphs = [];
