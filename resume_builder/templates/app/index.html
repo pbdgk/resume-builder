@@ -11,12 +11,23 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.min.js"></script>
+    <script src="//unpkg.com/navigo@6"></script>
     <title>Portfolio Builder</title>
     </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+
+    <aside>
+      <ul>
+        <li><a href="Profile" data-navigo>Profile</a></li>
+        <li><a href="Summary" data-navigo>Summary</a></li>
+        <li><a href="Experience" data-navigo>Experience</a></li>
+        <li><a href="Education" data-navigo>Education</a></li>
+        <li><a href="Skills" data-navigo>Skills</a></li>
+      </ul>
+    </aside>
 
     <div id="resMessage">
       <i class="fa fa-check"></i>
@@ -61,12 +72,10 @@
     </div>
 
     <div class="container">
-      <button id="myBtn">Modal</button>
+      <div id="content"></div>
     </div>
 
-
     <div class="new-field-section">
-    <!-- <div class="modal" style="display:block"> -->
     <div class="modal" style="display:none">
       <div class="modal-wrapper">
         <div class="modal-header">
@@ -102,47 +111,10 @@
 
 
     </div>
-
-
-
-
-
-
-
-    <main style="display: block">
-      <div class="container">
-        <div id="profilesTarget">Loading...</div>
-      </div>
-
-      <div class="container">
-        <div id="socialsTarget">Loading...</div>
-      </div>
-
-      <div class="container">
-        <div id="summariesTarget">Loading...</div>
-      </div>
-
-      <div class="container">
-        <div id="jobsTarget">Loading...</div>
-        <div class="add-new-possition">
-          <button id="addJob">Add new company</button>
-        </div>
-      </div>
-
-      <div class="container">
-        <div id="schoolsTarget">Loading...</div>
-        <div class="add-new-possition">
-          <button id="addSchool">Add new school</button>
-        </div>
-      </div>
-
-      <div class="container">
-        <div id="skillsTarget">Loading...</div>
-        <div class="add-new-possition">
-          <button id="addSkill">Add new skill</button>
-        </div>
-      </div>
     </main>
+    <script>
+
+    </script>
     <script src="{% static "app/js/main.js" %}"></script>
   </body>
 </html>

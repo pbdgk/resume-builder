@@ -60,21 +60,25 @@ class BaseRenderer {
   }
 
   rememberContainer() {
-    this.container = document.getElementById(`${this.cName}Target`);
+    // this.container = document.getElementById(`${this.cName}Target`);
+    this.container = document.getElementById("content");
   }
 }
 
 class SingleRenderer extends BaseRenderer {
   renderTemplate(template) {
+    console.log('gere')
     var rendered = Mustache.render(template, this.data);
-    $(`#${this.cName}Target`).html(rendered);
+    // $(`#${this.cName}Target`).html(rendered);
+    $("#content").html(rendered);
   }
 }
 
 class MultipleRenderer extends BaseRenderer {
   renderTemplate(template) {
     var rendered = Mustache.render(template, { [this.cName]: this.data });
-    $(`#${this.cName}Target`).html(rendered);
+    // $(`#${this.cName}Target`).html(rendered);
+    $("#content").html(rendered);
   }
 }
 
@@ -338,17 +342,13 @@ class RatingChangeListener extends BaseChangeListener {
             console.log("error", response.status);
           } else {
             showGoodResponse();
-            console.log("SUCCESS", msg);
+            console.log("SUCCESS");
           }
         })
         .catch(e => {
           console.log(e.message);
         });
     });
-  }
-  onRatingChange() {
-    let model = getContainerName(target);
-    listenRating(target, fn, event, model);
   }
 }
 
@@ -577,7 +577,18 @@ const objects = {
 };
 
 
-["profiles", "summaries", "socials", "jobs", "schools", "skills"].forEach(cName => {
+// ["profiles", "summaries", "socials", "jobs", "schools", "skills"].forEach(cName => {
+//   getData(cName)
+//     .then(data => {
+//       render(cName, data);
+//     })
+//     .catch(e => {
+//       console.log(e.message);
+//     });
+// });
+
+
+function show(cName){
   getData(cName)
     .then(data => {
       render(cName, data);
@@ -585,12 +596,17 @@ const objects = {
     .catch(e => {
       console.log(e.message);
     });
-});
+}
+
 
 function render(cName, data) {
-  let { renderer, listeners } = objects[cName];
-  let r = new renderer(data, cName, listeners);
-  r.render();
+  try {
+    let { renderer, listeners } = objects[cName];
+    let r = new renderer(data, cName, listeners);
+    r.render();
+  } catch (e){
+    console.log(e)
+  }
 }
 
 
@@ -637,8 +653,32 @@ function addSocial(target) {
   })
 }
 
+var root = null;
+var useHash = true; // Defaults to: false
+var hash = '#'; // Defaults to: '#'
+var router = new Navigo(root, useHash, hash);
+router
+  .on({
+    'Profile': function () {
+      show("profiles");
+      // console.log('profiels')
+    },
+    'Summary/': function () {
+      show("summaries");
+    },
+    'Experience/': function () {
+      show("jobs");
+    },
+    'Education/': function () {
+      show("schools");
+    },
+    'Skills/': function () {
+      show("skills");
+    },
+  })
+  .resolve();
 
-
-class SocialField {
-
-}
+router.notFound(function (query) {
+console.log('here')
+router.navigate('Profile')
+});
