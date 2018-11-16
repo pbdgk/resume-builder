@@ -65,8 +65,8 @@ class Builder {
   build() {
     this.currentPage = this.createPage()
     this.renderSpace(1130);
-    this.buildExperience();
-    this.buildExperience();
+    // this.buildExperience();
+    this.buildEducation()
   }
 
   createPage() {
@@ -176,26 +176,39 @@ class Builder {
     }
   }
 
-  renderJob(job){
-    this.createDataContainer();
-    this.createDateEntry(job);
-    this.createSubjectEntry(job);
-    this.createSubTitleEntry(job);
-    this.createParagraphsEntry(job.experience);
-
-
-  }
-
   buildExperience() {
     const exp = this.doc.exp;
     this.createTitleEntry("Experience");
     for (let i = 0; i < exp.length; i++) {
       let job = exp[i];
-      this.renderJob(job)
+      this.renderJob(job);
+    }
+  }
 
+  renderJob(job){
+    this.createDataContainer();
+    this.createDateEntry(job);
+    this.createSubjectEntry(job.position);
+    this.createSubTitleEntry(job);
+    this.createParagraphsEntry(job.experience);
+  }
 
+  buildEducation() {
+    const schools = this.doc.edu;
+    this.createTitleEntry("Education");
+    for (let i = 0; i < schools.length; i++) {
+      let school = schools[i];
+      this.renderSchool(school);
+    }
+  }
 
-
+  renderSchool(school){
+    this.createDataContainer();
+    this.createDateEntry(school);
+    this.createSubjectEntry(school.name);
+    this.createParagraphsEntry(school.description);
+  }
+  
 
     // let section = this.createTitleEntry("Experience");
     // for (let i = 0; i < exp.length; i++) {
@@ -225,8 +238,7 @@ class Builder {
     //     }
     //   }
     // }
-  }
-}
+
 
   createEntry() {
     const row = this.createSectionSkillet();
@@ -271,13 +283,13 @@ class Builder {
     }
   }
   
-  createSubjectEntry(obj) {
+  createSubjectEntry(data) {
     const subject = this.createNode("div", ["subject", "inline-b"]);
     this.currentSubject = subject;
     this.currentContent.appendChild(subject);
     const name = this.createNode("h5");
     subject.appendChild(name);
-    name.innerHTML = obj.position;
+    name.innerHTML = data;
     if (this.checkEndOfPage(this.currentContent)) {
         this.manageContentContainerWrap(this.currentContent);
     }
