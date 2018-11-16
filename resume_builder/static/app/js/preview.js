@@ -10,6 +10,31 @@ const myHeaders = new Headers({
   "Content-Type": "application/json"
 });
 
+function showFile(blob){
+  // It is necessary to create a new blob object with mime-type explicitly set
+  // otherwise only Chrome works like it should
+  var newBlob = new Blob([blob], {type: "application/pdf"})
+  // // IE doesn't allow using a blob object directly as link href
+  // // instead it is necessary to use msSaveOrOpenBlob
+  // if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+  //   window.navigator.msSaveOrOpenBlob(newBlob);
+  //   return;
+  // }
+
+ 
+  // For other browsers: 
+  // Create a link pointing to the ObjectURL containing the blob.
+  const data = window.URL.createObjectURL(newBlob);
+  const link = document.getElementById('downl')
+  link.href = data;
+  // link.download="file.pdf";
+  link.click();
+  setTimeout(function(){ 
+    window.URL.revokeObjectURL(data)
+  }, 100)
+}
+ 
+
 function getCookie(name) {
   var cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -34,8 +59,10 @@ function send(e) {
     body: JSON.stringify(t)
   })
     .then(response => {
-      console.log(response.status);
+      return response.blob()
+      
     })
+    .then(showFile)
     .catch(e => {
       console.log(e);
     });

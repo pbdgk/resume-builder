@@ -257,8 +257,7 @@ class Download(APIView):
         base = settings.BASE_DIR
         out = os.path.join(base, 'api/out.pdf')
         css = os.path.join(base, 'static/app/css/preview.css') 
-        pdf = pdfkit.from_string(data, out, css=css)
-        # print(pdf)
-        # response = HttpResponse(pdf, content_type='application/pdf') 
-        # return response
-        return Response(status.HTTP_200_OK)
+        pdf = pdfkit.from_string(data, False, css=css)
+        response = HttpResponse(pdf, content_type='application/pdf') 
+        return response
+        # return Response(status.HTTP_200_OK)
