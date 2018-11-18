@@ -9,7 +9,6 @@ const myHeaders = new Headers({
   "Accept": "application/json",
   "Content-Type": "application/json"
 });
-console.log(myHeaders)
 
 function getCookie(name) {
   var cookieValue = null;
@@ -383,7 +382,7 @@ class DateChangeListener extends BaseChangeListener {
           console.log("error", response.status);
         } else {
           showGoodResponse();
-          console.log("SUCCESS", msg);
+          console.log("SUCCESS");
         }
       })
       .catch(e => {
@@ -527,8 +526,7 @@ class ImageChangeListener extends BaseChangeListener {
 function getTemplate(url) {
   return fetch(url)
     .then(response => {
-      let p = response.text();
-      return p;
+      return response.text();
     })
     .catch(e => {
       console.log(e);
@@ -591,7 +589,6 @@ class Page{
     });
   }
   async render() {
-    
     const data = await this.getData()
     try {
       const renderer = new this.renderer(data, this.cName, this.listeners)
