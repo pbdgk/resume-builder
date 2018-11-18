@@ -27,8 +27,7 @@ a {
 
 
 main {
-  margin-left: 420px;
-  margin-top: 100px;
+  margin: 100px 150px 100px 500px;
 }
 
 .c6 {
@@ -93,7 +92,7 @@ main {
 
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
-  color:#FF912C;
+  color: rgb(230, 44, 51);;
 }
 
 
@@ -266,13 +265,26 @@ main {
 .panel {
   display: flex;
   position: relative;
+  padding-bottom: 25px;
+}
+
+.panel .forms-container {
+  display: flex;
+}
+
+.panel .forms-container .form {
+  flex-basis: 50%;
+}
+
+.panel .forms-container .form:first-child{
+  margin-right: 15px;
 }
 
 .panel .form {
   background-color: #F2F2F2;
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-  width: 100%;
   display: flex;
+  flex-basis: 100%;
   flex-wrap: wrap;
   padding: 5px 0 15px 0;
   align-content: flex-start;
@@ -309,7 +321,7 @@ main {
 
 .form-field {
   background-color: #fbfbfb;
-  border: 2px solid rgba(141, 198, 205, 0.5);
+  border: none;
   line-height: 20px;
   padding: 11px 16px 10px 16px;
   outline: none;
@@ -322,13 +334,14 @@ main {
 
 
 .avatar-wrapper {
-  width: 170px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  min-width: 176px;
+  max-height: 176px;
   background-color: #fff;
   border-radius: 4px;
-  position: absolute;
-  right: 0;
-  height: 100%;
+  position: relative;
   overflow: hidden;
+  margin-left: 15px;
 }
 
 .avatar {
@@ -400,7 +413,9 @@ main {
 /*  ===============  SUMMARY  ===================== */
 
 .field textarea {
-  resize: none;
+  resize: vertical;
+  min-height: 100px;
+  height: auto;
   word-wrap: break-word;
   overflow: auto;
 }
@@ -444,7 +459,6 @@ main {
 
 .date-select-box select{
   background-color: #fbfbfb;
-  border: 2px solid rgba(141, 198, 205, 0.5);
   padding: 10px 12px;
   border-top: 2px solid #e3e7eb;
   border-radius: 3px;

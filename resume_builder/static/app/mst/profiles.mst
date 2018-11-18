@@ -21,13 +21,13 @@
     </div>
 
     <div class="avatar-wrapper">
-    <div class="avatar"></div>
-    <div class="overlay">
-        <div class="btn-photo" id="btn-upload-avatar">
-        <i class="fas fa-cloud-upload-alt"></i>
-        Change Photo
-        <input type="file" name="avatar" id="inp-avatar" style="display:none">
+        <div class="avatar"></div>
+        <div class="overlay">
+            <div class="btn-photo" id="btn-upload-avatar">
+            <i class="fas fa-cloud-upload-alt"></i>
+            Change Photo
+            <input type="file" name="avatar" id="inp-avatar" style="display:none">
+            </div>
         </div>
-    </div>
     </div>
 </section>
