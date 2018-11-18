@@ -35,3 +35,4 @@
   </div>
 </section>
 {{ /skills }}
+<button data-add>Add more</button>
