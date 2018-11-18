@@ -35,22 +35,19 @@ function showGoodResponse() {
   }, 1000);
 }
 
-// ====================== cropper init ==================================
 
 // ====================== Renderers ==================================
 
 class BaseRenderer {
-  render() {
+  async render() {
     this.rememberContainer();
-    let url = `/static/app/mst/${this.cName}.mst`;
-    let promise = getTemplate(url);
-    for (let i = 0; i < this.methods.length; i++) {
-      promise = promise.then(this.methods[i].bind(this));
+    this.url = `/static/app/mst/${this.cName}.mst`;
+    await this.renderTemplate()
+    for (let i = 0; i < this.methods.length; i++){
+      this.methods[i].bind(this)()  
     }
-    promise.catch(e => {
-      console.error(e);
-    });
   }
+
   registerListeners() {
     const len = this.listeners.length;
     for (let i = 0; i < len; i++) {
@@ -65,16 +62,19 @@ class BaseRenderer {
 }
 
 class SingleRenderer extends BaseRenderer {
-  renderTemplate(template) {
+  async renderTemplate() {
+    const template = await getTemplate(this.url)
     var rendered = Mustache.render(template, this.data);
-    $("#content").html(rendered);
+    await $("#content").html(rendered);
   }
 }
 
 class MultipleRenderer extends BaseRenderer {
-  renderTemplate(template) {
-    var rendered = Mustache.render(template, { [this.cName]: this.data });
-    $("#content").html(rendered);
+  async renderTemplate() {
+    const template = await getTemplate(this.url)
+    var rendered =  Mustache.render(template, { [this.cName]: this.data });
+    console.log(typeof rendered)
+    await $("#content").html(rendered);
   }
 }
 
@@ -101,7 +101,7 @@ class WithDatesRenderer extends MultipleRenderer {
 
   setDates() {
     let containers = this.container.querySelectorAll("section");
-    let dateContainer, data, section;
+    let dateContainer, data;
     for (let i = 0; i < containers.length; i++) {
       (dateContainer = containers[i]), (data = this.data[i]);
       let dateObj = {
@@ -180,7 +180,6 @@ class ProfileRenderer extends SingleRenderer {
     this.cName = cName;
     this.listeners = listeners;
     this.methods = [
-      this.renderTemplate,
       this.setAvatar,
       this.registerListeners
     ];
@@ -198,10 +197,7 @@ class SummaryRenderer extends SingleRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [
-      this.renderTemplate,
-      this.registerListeners
-    ];
+    this.methods = [this.registerListeners];
   }
 }
 
@@ -211,14 +207,13 @@ class SocialRenderer extends MultipleRenderer {
     this.data = data;
     this.cName = cName;
     this.listeners = listeners;
-    this.methods = [
-      this.renderTemplate,
-      this.registerListeners
-    ];
+    this.methods = [this.registerListeners];
   }
-  renderTemplate(template) {
+  async renderTemplate() {
+    console.log('get template')
+    const template = await getTemplate(this.url)
     var rendered = Mustache.render(template, {...this.data});
-    $("#content").html(rendered);
+    await $("#content").html(rendered);
   }
 }
 
@@ -229,7 +224,6 @@ class JobRenderer extends WithDatesRenderer {
     this.cName = cName;
     this.listeners = listeners;
     this.methods = [
-      this.renderTemplate,
       this.manageDateFields,
       this.registerListeners
     ];
@@ -243,7 +237,6 @@ class SchoolRenderer extends WithDatesRenderer {
     this.cName = cName;
     this.listeners = listeners;
     this.methods = [
-      this.renderTemplate,
       this.manageDateFields,
       this.registerListeners
     ];
@@ -257,7 +250,6 @@ class SkillRenderer extends WithRatingsRenderer {
     this.cName = cName;
     this.listeners = listeners;
     this.methods = [
-      this.renderTemplate,
       this.manageRatingFields,
       this.registerListeners
     ];
@@ -266,7 +258,7 @@ class SkillRenderer extends WithRatingsRenderer {
 
 // ====================== Change Listeners =============================
 
-class BaseChangeListener {
+class BaseListener {
   constructor(container, cName) {
     this.container = container;
     this.cName = cName;
@@ -277,7 +269,7 @@ class BaseChangeListener {
   }
 }
 
-class RatingChangeListener extends BaseChangeListener {
+class RatingChangeListener extends BaseListener {
   listen() {
     let ratings = document.getElementsByClassName("star");
     for (let i = 0; i < ratings.length; i++) {
@@ -348,7 +340,7 @@ class RatingChangeListener extends BaseChangeListener {
   }
 }
 
-class DateChangeListener extends BaseChangeListener {
+class DateChangeListener extends BaseListener {
   getDatePrefix(target) {
     let container = target.closest("[data-prefix]");
     return container.dataset.prefix;
@@ -391,7 +383,7 @@ class DateChangeListener extends BaseChangeListener {
   }
 }
 
-class FieldChangeListener extends BaseChangeListener {
+class FieldChangeListener extends BaseListener {
   // TODO maybe should remove all this ids
   listen() {
     let fields = this.container.getElementsByClassName("form-field");
@@ -431,7 +423,7 @@ class FieldChangeListener extends BaseChangeListener {
   }
 }
 
-class ImageChangeListener extends BaseChangeListener {
+class ImageChangeListener extends BaseListener {
   constructor(...args) {
     super(args);
     this.image = document.getElementById("toCropImg");
@@ -588,11 +580,18 @@ class Page{
       console.log(e.message);
     });
   }
+
+  async show(){
+    await this.render();
+    this.animate()
+
+  }
+
   async render() {
     const data = await this.getData()
     try {
       const renderer = new this.renderer(data, this.cName, this.listeners)
-      renderer.render()
+      await renderer.render()
     } catch (e){
       console.log(e)
     }
@@ -649,6 +648,28 @@ class ExperiencePage extends Page {
     this.renderer = JobRenderer
     this.listeners = [FieldChangeListener, DateChangeListener]
   }
+  animate(){
+    super.animate();
+    this.addNewSection()
+  }
+
+  addNewSection(){
+    const addBtn = document.querySelector('[data-add]')
+    addBtn.addEventListener('click', () => {
+      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+      fetch(url, {
+        method: "POST",
+        headers: myHeaders,
+      })
+      .then(response => {
+        console.log(response.status)
+        this.render()
+      })
+      .catch(e => {
+        console.log(e.message)
+      })
+    })
+  }
 }
 
 class EducationPage extends Page {
@@ -658,6 +679,30 @@ class EducationPage extends Page {
     this.renderer = SchoolRenderer
     this.listeners = [FieldChangeListener, DateChangeListener]
   }
+
+
+  animate(){
+    super.animate();
+    this.addNewSection()
+  }
+
+  addNewSection(){
+    const addBtn = document.querySelector('[data-add]')
+    addBtn.addEventListener('click', () => {
+      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+      fetch(url, {
+        method: "POST",
+        headers: myHeaders,
+      })
+      .then(response => {
+        console.log(response.status)
+        this.render()
+      })
+      .catch(e => {
+        console.log(e.message)
+      })
+    })
+  }
 }
 
 class SkillPage extends Page {
@@ -666,6 +711,28 @@ class SkillPage extends Page {
     this.cName = 'skills'
     this.renderer = SkillRenderer
     this.listeners = [FieldChangeListener, RatingChangeListener]
+  }
+  animate(){
+    super.animate();
+    this.addNewSection()
+  }
+
+  addNewSection(){
+    const addBtn = document.querySelector('[data-add]')
+    addBtn.addEventListener('click', () => {
+      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+      fetch(url, {
+        method: "POST",
+        headers: myHeaders,
+      })
+      .then(response => {
+        console.log(response.status)
+        this.render()
+      })
+      .catch(e => {
+        console.log(e.message)
+      })
+    })
   }
 }
 
@@ -683,13 +750,12 @@ const router = new Navigo('/app/', true);
 Object.keys(pages).forEach(url => {
   router.on({[url]: function() {
     let page = new pages[url]();
-    page.render();
-    page.animate();
+    page.show();
   }})
   .resolve()
 })
 
 
 router.notFound(function () {
-  router.navigate('profile')
+  router.navigate('profile/')
 });

@@ -95,6 +95,9 @@ main {
   color: rgb(230, 44, 51);;
 }
 
+tr {
+  transition: display 2s linear;
+}
 
 /* ================ NAVIGATION ===============*/
 
