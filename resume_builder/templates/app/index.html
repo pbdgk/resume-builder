@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="{% static "app/css/normalize.css" %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=cyrillic" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css">
     <link rel="stylesheet" href="{% static "app/css/style.css" %}">
@@ -18,17 +19,17 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+      <aside class="nav-panel">
+        <ul>
+          <li><a href="profile" data-route="profile">Profile</a></li>
+          <li><a href="summary" data-route="summary">Summary</a></li>
+          <li><a href="experience" data-route="experience">Experience</a></li>
+          <li><a href="education" data-route="education">Education</a></li>
+          <li><a href="skills" data-route="skills">Skills</a></li>
+        </ul>
+        <button class="add-new">+</button>
 
-    <aside>
-      <ul>
-        <li><a href="Profile" data-navigo>Profile</a></li>
-        <li><a href="Summary" data-navigo>Summary</a></li>
-        <li><a href="Experience" data-navigo>Experience</a></li>
-        <li><a href="Education" data-navigo>Education</a></li>
-        <li><a href="Skills" data-navigo>Skills</a></li>
-      </ul>
     </aside>
-
     <div id="resMessage">
       <i class="fa fa-check"></i>
       <strong>Saved</strong>
@@ -71,50 +72,48 @@
       </div>
     </div>
 
+  <main>
     <div class="container">
       <div id="content"></div>
     </div>
+  </main>
 
     <div class="new-field-section">
-    <div class="modal" style="display:none">
-      <div class="modal-wrapper">
-        <div class="modal-header">
-          <h3>Choose Field</h3>
-          <i class="fa fa-times" aria-hidden="true"></i>
-        </div>
-        <div class="modal-content">
-          <div class="wrapper">
-            <ul>
-              <li onclick="github(this)" class="social-field">
-                <span></span>
-                <span data-label='Github'>Github</span>
-              </li>
-              <li class="social-field">
-                <span></span>
-                <span>Instagram</span>
-              </li>
-              <li class="social-field">
-                <span></span>
-                <span>Youtube</span>
-              </li>
-            </ul>
+      <div class="modal" style="display:none">
+        <div class="modal-wrapper">
+          <div class="modal-header">
+            <h3>Choose Field</h3>
+            <i class="fa fa-times" aria-hidden="true"></i>
           </div>
-        </div>
-        <div class="modal-footer">
-          <div class="modal-btn-wrapper">
-            <button id="save" class="btn-modal btn-save">Save</button>
-            <button class="btn-modal btn-cancel">Cancel</button>
+          <div class="modal-content">
+            <div class="wrapper">
+              <ul>
+                <li onclick="github(this)" class="social-field">
+                  <span></span>
+                  <span data-label='Github'>Github</span>
+                </li>
+                <li class="social-field">
+                  <span></span>
+                  <span>Instagram</span>
+                </li>
+                <li class="social-field">
+                  <span></span>
+                  <span>Youtube</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="modal-btn-wrapper">
+              <button id="save" class="btn-modal btn-save">Save</button>
+              <button class="btn-modal btn-cancel">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-
-    </div>
-    </main>
-    <script>
-
-    </script>
     <script src="{% static "app/js/main.js" %}"></script>
+    <script src="{% static "app/js/animate.js" %}"></script>
   </body>
 </html>

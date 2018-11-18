@@ -6,9 +6,10 @@ const GITHUB_RE_PATTERN = /^https?:\/\/github\.com/;
 const csrftoken = getCookie("csrftoken");
 const myHeaders = new Headers({
   "X-CSRFToken": csrftoken,
-  Accept: "application/json",
+  "Accept": "application/json",
   "Content-Type": "application/json"
 });
+console.log(myHeaders)
 
 function getCookie(name) {
   var cookieValue = null;
@@ -502,7 +503,7 @@ class ImageChangeListener extends BaseChangeListener {
   onHideModal() {
     window.addEventListener("click", this.hideModal);
   }
-  
+
   onLoadImage() {
     let btn = document.getElementById("inp-avatar");
     btn.addEventListener("change", e => {
@@ -659,26 +660,44 @@ var hash = '#'; // Defaults to: '#'
 var router = new Navigo(root, useHash, hash);
 router
   .on({
-    'Profile': function () {
+    'profile/': function () {
       show("profiles");
-      // console.log('profiels')
     },
-    'Summary/': function () {
+    'summary/': function () {
       show("summaries");
     },
-    'Experience/': function () {
+    'experience/': function () {
       show("jobs");
     },
-    'Education/': function () {
+    'education/': function () {
       show("schools");
     },
-    'Skills/': function () {
+    'skills/': function () {
       show("skills");
     },
   })
   .resolve();
 
+function setRoutes(){
+  const navLinks = document.querySelectorAll('.nav-panel a')
+  navLinks.forEach( link => {
+    let route = link.dataset.route
+    if (route) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('route')
+        console.log(e.target)
+        router.navigate(route)
+        makeActiveNavLink(e.target, navLinks);
+      })
+    }
+  })
+}
+
+setRoutes()
+
 router.notFound(function (query) {
-console.log('here')
-router.navigate('Profile')
+  console.log('qury')
+  console.log('here')
+  router.navigate('profile')
 });

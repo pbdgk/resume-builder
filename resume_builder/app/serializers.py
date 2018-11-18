@@ -74,52 +74,11 @@ class SkillSerializer(serializers.ModelSerializer):
         fields = ('name', 'rating', 'priority')
 
 
-
-
-
-# class PhotoSerializer(serializers.Serializer):
-#     image = serializers.ImageField()
-
-
-#     def create(self, validated_data):
-#         print(validated_data)
-#         return Photo(**validated_data)
-    
-
-#     def update(self, instance, validated_data):
-#         instance.image = validated_data.get('image', instance.image)
-#         return instance
-
-
-
-
-
 class PhotoSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
     class Meta:
         model = Photo
         fields = ('image',)
-# class PersonalDataSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model PersonalData
-#         fields = ('')
-# class PhotoSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = Photo
-#         fields = ('image', 'owner')
-#
-#         # TODO: check this down
-#         owner = serializers.Field(source='owner.username')
-
-# class ResumeSerializer(serializers.Serializer):
-
-    # main = MainSerializer()
-    # photo = PhotoSerializer()
-    # personal = PersonalSerializer(many=True)
-    # social = SocialSerializer(many=True)
-    # jobs = JobSerializer(many=True)
-    # skills = SkillSerializer(many=True)
-    # languages = LangunageSerializer(many=True)
 
 
 class DocSerializer(serializers.Serializer):
