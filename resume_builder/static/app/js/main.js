@@ -61,16 +61,13 @@ class BaseRenderer {
   }
 
   rememberContainer() {
-    // this.container = document.getElementById(`${this.cName}Target`);
     this.container = document.getElementById("content");
   }
 }
 
 class SingleRenderer extends BaseRenderer {
   renderTemplate(template) {
-    console.log('gere')
     var rendered = Mustache.render(template, this.data);
-    // $(`#${this.cName}Target`).html(rendered);
     $("#content").html(rendered);
   }
 }
@@ -78,7 +75,6 @@ class SingleRenderer extends BaseRenderer {
 class MultipleRenderer extends BaseRenderer {
   renderTemplate(template) {
     var rendered = Mustache.render(template, { [this.cName]: this.data });
-    // $(`#${this.cName}Target`).html(rendered);
     $("#content").html(rendered);
   }
 }
@@ -223,7 +219,7 @@ class SocialRenderer extends MultipleRenderer {
   }
   renderTemplate(template) {
     var rendered = Mustache.render(template, {...this.data});
-    $(`#${this.cName}Target`).html(rendered);
+    $("#content").html(rendered);
   }
 }
 
@@ -527,17 +523,6 @@ class ImageChangeListener extends BaseChangeListener {
 
 // ====================== Entry =============================
 
-function getData(cName) {
-  let url = `http://127.0.0.1:8000/api/v1/${cName}/`;
-  return fetch(url)
-    .then(response => {
-      return response.json();
-    })
-    .catch(e => {
-      console.log(e.message);
-    });
-}
-
 // TODO check response
 function getTemplate(url) {
   return fetch(url)
@@ -550,154 +535,164 @@ function getTemplate(url) {
     });
 }
 
-const objects = {
-  profiles: {
-    renderer: ProfileRenderer,
-    listeners: [FieldChangeListener, ImageChangeListener]
-  },
-  summaries: {
-    renderer: SummaryRenderer,
-    listeners: [FieldChangeListener]
-  },
-  socials: {
-    renderer: SocialRenderer,
-    listeners: [FieldChangeListener]
-  },
-  jobs: {
-    renderer: JobRenderer,
-    listeners: [FieldChangeListener, DateChangeListener]
-  },
-  schools: {
-    renderer: SchoolRenderer,
-    listeners: [FieldChangeListener, DateChangeListener]
-  },
-  skills: {
-    renderer: SkillRenderer,
-    listeners: [FieldChangeListener, RatingChangeListener]
-  }
-};
+// const gh = {
+//   label: 'Github',
+//   value: '',
+//   field_type: 'text',
+//   fa_image_class: "fab fa-github",
+//   field_name: 'github',
+//   priority: 0,
+//   validate: function(){
+//     return this.value
+//       ? this.value.match(GITHUB_RE_PATTERN)
+//       : true
+//   }
+// }
+
+// const SOCIALS = {
+//   'Github': gh,
+// }
 
 
-// ["profiles", "summaries", "socials", "jobs", "schools", "skills"].forEach(cName => {
-//   getData(cName)
-//     .then(data => {
-//       render(cName, data);
-//     })
-//     .catch(e => {
-//       console.log(e.message);
-//     });
-// });
+
+// let github = (target) => {
+//   const label = target.childNodes[3].dataset.label
+//   const social = SOCIALS[label]
+//   addSocial(social)
+// }
 
 
-function show(cName){
-  getData(cName)
-    .then(data => {
-      render(cName, data);
+// function addSocial(target) {
+//   const url = `http://127.0.0.1:8000/api/v1/socials/`;
+//   fetch(url, {
+//     method: "POST",
+//     headers: myHeaders,
+//     body: JSON.stringify(target)
+//   })
+//   .then(response => {
+//     return response.json()
+//   })
+//   .catch(e => {
+//     console.log(e.message)
+//   })
+// }
+
+
+class Page{
+
+  getData(){
+  let url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+  return fetch(url)
+    .then(response => {
+      return response.json();
     })
     .catch(e => {
       console.log(e.message);
     });
-}
-
-
-function render(cName, data) {
-  try {
-    let { renderer, listeners } = objects[cName];
-    let r = new renderer(data, cName, listeners);
-    r.render();
-  } catch (e){
-    console.log(e)
   }
-}
-
-
-
-const gh = {
-  label: 'Github',
-  value: '',
-  field_type: 'text',
-  fa_image_class: "fab fa-github",
-  field_name: 'github',
-  priority: 0,
-  validate: function(){
-    return this.value
-      ? this.value.match(GITHUB_RE_PATTERN)
-      : true
-  }
-}
-
-const SOCIALS = {
-  'Github': gh,
-}
-
-
-
-let github = (target) => {
-  const label = target.childNodes[3].dataset.label
-  const social = SOCIALS[label]
-  addSocial(social)
-}
-
-
-function addSocial(target) {
-  const url = `http://127.0.0.1:8000/api/v1/socials/`;
-  fetch(url, {
-    method: "POST",
-    headers: myHeaders,
-    body: JSON.stringify(target)
-  })
-  .then(response => {
-    return response.json()
-  })
-  .catch(e => {
-    console.log(e.message)
-  })
-}
-
-var root = null;
-var useHash = true; // Defaults to: false
-var hash = '#'; // Defaults to: '#'
-var router = new Navigo(root, useHash, hash);
-router
-  .on({
-    'profile/': function () {
-      show("profiles");
-    },
-    'summary/': function () {
-      show("summaries");
-    },
-    'experience/': function () {
-      show("jobs");
-    },
-    'education/': function () {
-      show("schools");
-    },
-    'skills/': function () {
-      show("skills");
-    },
-  })
-  .resolve();
-
-function setRoutes(){
-  const navLinks = document.querySelectorAll('.nav-panel a')
-  navLinks.forEach( link => {
-    let route = link.dataset.route
-    if (route) {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('route')
-        console.log(e.target)
-        router.navigate(route)
-        makeActiveNavLink(e.target, navLinks);
-      })
+  async render() {
+    
+    const data = await this.getData()
+    try {
+      const renderer = new this.renderer(data, this.cName, this.listeners)
+      renderer.render()
+    } catch (e){
+      console.log(e)
     }
-  })
+  }
+
+  animate(){
+    this.activeNavLink();
+  }
+
+  activeNavLink() {
+    const navLinks = document.querySelectorAll('.nav-panel a')
+    let currentLink;
+    navLinks.forEach(link => {
+      link.classList.remove('active-nav-link')
+      if (link.dataset.route == this.cName) {
+        currentLink = link;
+      }
+    })
+    currentLink && currentLink.classList.add('active-nav-link') 
+  }
 }
 
-setRoutes()
+class MainPage extends Page {
+  constructor() {
+    super();
+    this.cName = 'profiles'
+    this.renderer = ProfileRenderer
+    this.listeners = [FieldChangeListener, ImageChangeListener]
+  }
+}
 
-router.notFound(function (query) {
-  console.log('qury')
-  console.log('here')
+class SocialsPage extends Page {
+  constructor() {
+    super();
+    this.cName = 'socials'
+    this.renderer = SocialRenderer
+    this.listeners = [FieldChangeListener]
+  }
+}
+
+class SummaryPage extends Page {
+  constructor() {
+    super();
+    this.cName = 'summaries'
+    this.renderer = SummaryRenderer
+    this.listeners = [FieldChangeListener]
+  }
+}
+
+class ExperiencePage extends Page {
+  constructor() {
+    super();
+    this.cName = 'jobs'
+    this.renderer = JobRenderer
+    this.listeners = [FieldChangeListener, DateChangeListener]
+  }
+}
+
+class EducationPage extends Page {
+  constructor() {
+    super();
+    this.cName = 'schools'
+    this.renderer = SchoolRenderer
+    this.listeners = [FieldChangeListener, DateChangeListener]
+  }
+}
+
+class SkillPage extends Page {
+  constructor() {
+    super();
+    this.cName = 'skills'
+    this.renderer = SkillRenderer
+    this.listeners = [FieldChangeListener, RatingChangeListener]
+  }
+}
+
+const pages = {
+  'profile/': MainPage,
+  'socials/': SocialsPage,
+  'summary/': SummaryPage,
+  'experience/': ExperiencePage,
+  'education/': EducationPage,
+  'skills/': SkillPage
+}
+
+const router = new Navigo('/app/', true);
+
+Object.keys(pages).forEach(url => {
+  router.on({[url]: function() {
+    let page = new pages[url]();
+    page.render();
+    page.animate();
+  }})
+  .resolve()
+})
+
+
+router.notFound(function () {
   router.navigate('profile')
 });
