@@ -141,7 +141,6 @@ DEFAULT_SOCIALS_FIELDS = (
     "field_type": "text",
     "fa_image_class": "fas fa-mobile-alt",
     "field_name": "phone",
-    "priority": 1,
     "group": 1
     },
 
@@ -150,7 +149,6 @@ DEFAULT_SOCIALS_FIELDS = (
     "field_type": "email",
     "fa_image_class": "far fa-envelope",
     "field_name": "email",
-    "priority": 2,
     "group": 1
     },
 
@@ -159,7 +157,6 @@ DEFAULT_SOCIALS_FIELDS = (
     "field_type": "text",
     "fa_image_class": "fas fa-birthday-cake",
     "field_name": "birthday",
-    "priority": 3,
     "group": 1
     },
 )
