@@ -178,13 +178,76 @@ class PhotoRestView(APIView):
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+SOCIALS = {
+    'github': {
+        'label': 'Github',
+        'field_type': 'text',
+        'field_name': 'github',
+        'fa_image_class': 'fab fa-github',
+    },
+
+    'linkedin': {
+        'label': 'Linkedin',
+        'field_type': 'text',
+        'field_name': 'linkedin',
+        'fa_image_class': "fab fa-linkedin-in",
+    },
+
+    'codepen': {
+        'label': 'Codepen',
+        'field_type': 'text',
+        'field_name': 'codepen',
+        'fa_image_class': "fab fa-codepen",
+    },
+
+    'link': {
+        'label': 'Website',
+        'field_type': 'text',
+        'field_name': 'link',
+        'fa_image_class': "fas fa-link" ,
+    },
+
+    'birthday': {
+        'label': 'Day of birth',
+        'field_type': 'text',
+        'field_name': 'birthday',
+        'fa_image_class': "fas fa-birthday-cake",
+    },
+
+    'email': {
+        'label': 'E-mail',
+        'field_type': 'text',
+        'field_name': 'email',
+        'fa_image_class': "far fa-envelope",
+    },
+
+    'phone': {
+        'label': 'Phone',
+        'field_type': 'text',
+        'field_name': 'phone',
+        'fa_image_class': "fas fa-mobile-alt",
+    }
+}
+
+
+
 class SocialRestView(APIView):
 
     def post(self, request, format=None):
         user = request.user
-        data = request.data
-        data.update({ "user": user.pk })
-        serialized = SocialSerializer(data=data)
+        social_name = request.data.get('social', None)
+        social = SOCIALS.get(social_name, None)
+
+        try:
+            group = int(request.data.get('group', None))
+        except ValueError:
+            group = None
+
+        if social is None or group is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        social.update({"user": user.pk, "group": group})
+        serialized = SocialSerializer(data=social)
         if serialized.is_valid():
             serialized.save()
             return Response(serialized.data, status=status.HTTP_200_OK)

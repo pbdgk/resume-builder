@@ -1,9 +1,9 @@
 <section class="panel">
   <div class="forms-container">
-    <div class="form">
+    <div class="form" data-group=1>
         <div class="field form-heading c12">
         <h4>Group #1</h4>
-        <span>Add field</span>
+        <span class='addSocialBtn'>Add field</span>
         </div>
 
         {{ #firstGroup }}
@@ -20,10 +20,10 @@
         </div>
         {{ /firstGroup }}
     </div>
-    <div class="form">
+    <div class="form" data-group=2>
     <div class="field form-heading c12">
         <h4>Group #2</h4>
-        <span>Add field</span>
+        <span class="addSocialBtn">Add field</span>
     </div>
 
     {{ #secondGroup }}

@@ -630,6 +630,80 @@ class SocialsPage extends Page {
     this.renderer = SocialRenderer
     this.listeners = [FieldChangeListener]
   }
+
+  async render(){
+    await super.render()
+    this.registerAddButtons()
+    this.addNewSocial()
+    this.onHideModal()
+  }
+
+  async rerender(){
+    await super.render();
+    this.registerAddButtons();
+    this.onHideModal()
+  }
+
+  registerAddButtons(){
+    const container = document.querySelector("#content section")
+    const btns = container.querySelectorAll('.addSocialBtn')
+    btns.forEach(btn => {
+      const group = btn.closest(".form").dataset.group;
+      btn.addEventListener('click', () => {
+        this.showModal(group)
+      })
+    })
+  }
+
+  hideOnOutClick(event) {
+    const modal = document.querySelector("#newSocialModal .modal")
+    if (event.target == modal) {
+      this.hide(modal)
+    }
+  }
+
+  hide(modal){
+    modal.style.display = "none";
+  }
+
+  onHideModal() {
+    window.addEventListener("click", this.hideOnOutClick.bind(this));
+  }
+
+  showModal(group){
+    const modal = document.querySelector("#newSocialModal .modal")
+    modal.dataset.group = group
+    modal.style.display = 'block'
+  }
+
+  addNewSocial(){
+    const modal = document.querySelector("#newSocialModal .modal")
+    const socialButtons = modal.querySelectorAll('[data-social]')
+    const self = this;
+    socialButtons.forEach(btn => {
+      btn.addEventListener('click', ({ target }) => {
+        console.log('clicked')
+        const data = {
+          group: modal.dataset.group,
+          social: target.dataset.social
+        }
+        const url = `http://127.0.0.1:8000/api/v1/${self.cName}/`;
+        fetch(url, {
+          method: "POST",
+          headers: myHeaders,
+          body: JSON.stringify(data)
+        })
+        .then(response => {
+          console.log(response.status)
+          self.hide(modal)
+          self.rerender()
+        })
+        .catch(e => {
+          console.log(e.message)
+        })
+      })
+    })
+  }
 }
 
 class SummaryPage extends Page {

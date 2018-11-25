@@ -7,7 +7,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     photo = serializers.SerializerMethodField()
 
-    def get_photo(serf, obj):
+    def get_photo(self, obj):
         photo = Photo.objects.get(user=obj.user)
         return photo.image.url
 
@@ -53,7 +53,7 @@ class GetSocialSerializer(serializers.ModelSerializer):
 class SocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Socials
-        fields = ('user', 'label', 'text', 'field_type', 'priority', 'field_name', 'fa_image_class')
+        fields = ('user', 'label', 'text', 'field_type', 'priority', 'field_name', 'fa_image_class', 'group',)
 
 
 class JobSerializer(serializers.ModelSerializer):

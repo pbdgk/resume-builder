@@ -79,7 +79,7 @@
     </div>
   </main>
 
-    <div class="new-field-section">
+    <div class="new-field-section" id="newSocialModal" data-group>
       <div class="modal" style="display:none">
         <div class="modal-wrapper">
           <div class="modal-header">
@@ -89,17 +89,33 @@
           <div class="modal-content">
             <div class="wrapper">
               <ul>
-                <li onclick="github(this)" class="social-field">
-                  <span></span>
-                  <span data-label='Github'>Github</span>
+                <li class="social-field">
+                  <i class="fab fa-github"></i>
+                  <span data-social='github'>Github</span>
                 </li>
                 <li class="social-field">
-                  <span></span>
-                  <span>Instagram</span>
+                  <i class="fab fa-linkedin-in"></i>
+                  <span data-social='linkedin'>Linkedin</span>
                 </li>
                 <li class="social-field">
-                  <span></span>
-                  <span>Youtube</span>
+                  <i class="fab fa-codepen"></i>
+                  <span data-social='codepen'>Codepen</span>
+                </li>
+                <li class="social-field">
+                  <i class="fas fa-link"></i>
+                  <span data-social='link'>Website</span>
+                </li>
+                <li class="social-field">
+                  <i class="fas fa-birthday-cake"></i>
+                  <span data-social='birthday'>Date of birth</span>
+                </li>
+                <li class="social-field">
+                  <i class="far fa-envelope"></i>
+                  <span data-social='email'>E-mail</span>
+                </li>
+                <li class="social-field">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span data-social='phone'>Phone</span>
                 </li>
               </ul>
             </div>
