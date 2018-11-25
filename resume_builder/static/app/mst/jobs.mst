@@ -3,7 +3,7 @@
   <div class="form">
     <div class="field form-heading c12">
       <h4>Company #{{priority}}</h4>
-      <span><i onclick="deleteSection(this, 'jobs')" class="fa fa-times" aria-hidden="true"></i></span>
+      <span class="deleteBtn"><i class="fa fa-times" aria-hidden="true"></i></span>
     </div>
     <div class="field c6">
         <label class="form-label">Line 1 (e.g. position)</label>

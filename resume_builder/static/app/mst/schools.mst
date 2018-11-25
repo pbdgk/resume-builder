@@ -3,7 +3,7 @@
   <div class="form">
     <div class="field form-heading c12">
       <h4>School #{{priority}}</h4>
-      <span><i onclick="deleteSection(this, 'schools')" class="fa fa-times" aria-hidden="true"></i></span>
+      <span class="deleteBtn"><i class="fa fa-times" aria-hidden="true"></i></span>
     </div>
     <div class="field c12">
         <label class="form-label">School name, major, minor, degree</label>

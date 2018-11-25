@@ -641,99 +641,101 @@ class SummaryPage extends Page {
   }
 }
 
-class ExperiencePage extends Page {
+class CreateDeleteSectionPage extends Page {
+  async render(){
+    await super.render()
+    this.addNewSection()
+    this.deleteSection()
+  }
+
+  deleteSection(){
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+      let deleteBtn = section.querySelector('.deleteBtn')
+      deleteBtn.addEventListener('click', ({ target }) => {
+        const parentSection = target.closest('section');
+        if (parentSection){
+          const sectionId = parentSection.dataset.num
+          if (sectionId){
+            this.delete({"priority": sectionId})
+          }
+        }
+      })
+    })
+  }
+
+  delete(id){
+    const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+    fetch(url, {
+      method: 'delete',
+      headers: myHeaders,
+      body: JSON.stringify(id)
+    })
+    .then(response => {
+      if (response.status == 200){
+        console.log("deleted")
+        this.render();
+      }
+      else {
+        console.log('some error on delete')
+        console.log(response.status)
+        console.log(response.message)
+      } 
+    })
+    .catch(e => {
+      console.log(e)
+    })
+  }
+  addNewSection(){
+    const addBtn = document.querySelector('[data-add]')
+    addBtn.addEventListener('click', () => {
+      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+      fetch(url, {
+        method: "POST",
+        headers: myHeaders,
+      })
+      .then(response => {
+        console.log(response.status)
+        this.render()
+      })
+      .catch(e => {
+        console.log(e.message)
+      })
+    })
+  }
+
+  animate(){
+    super.animate();
+  }
+}
+
+class ExperiencePage extends CreateDeleteSectionPage {
   constructor() {
     super();
     this.cName = 'jobs'
     this.renderer = JobRenderer
     this.listeners = [FieldChangeListener, DateChangeListener]
   }
-  animate(){
-    super.animate();
-    this.addNewSection()
-  }
-
-  addNewSection(){
-    const addBtn = document.querySelector('[data-add]')
-    addBtn.addEventListener('click', () => {
-      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
-      fetch(url, {
-        method: "POST",
-        headers: myHeaders,
-      })
-      .then(response => {
-        console.log(response.status)
-        this.render()
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
-    })
-  }
 }
 
-class EducationPage extends Page {
+class EducationPage extends CreateDeleteSectionPage {
   constructor() {
     super();
     this.cName = 'schools'
     this.renderer = SchoolRenderer
     this.listeners = [FieldChangeListener, DateChangeListener]
   }
-
-
-  animate(){
-    super.animate();
-    this.addNewSection()
-  }
-
-  addNewSection(){
-    const addBtn = document.querySelector('[data-add]')
-    addBtn.addEventListener('click', () => {
-      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
-      fetch(url, {
-        method: "POST",
-        headers: myHeaders,
-      })
-      .then(response => {
-        console.log(response.status)
-        this.render()
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
-    })
-  }
 }
 
-class SkillPage extends Page {
+class SkillPage extends CreateDeleteSectionPage {
   constructor() {
     super();
     this.cName = 'skills'
     this.renderer = SkillRenderer
     this.listeners = [FieldChangeListener, RatingChangeListener]
   }
-  animate(){
-    super.animate();
-    this.addNewSection()
-  }
 
-  addNewSection(){
-    const addBtn = document.querySelector('[data-add]')
-    addBtn.addEventListener('click', () => {
-      const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
-      fetch(url, {
-        method: "POST",
-        headers: myHeaders,
-      })
-      .then(response => {
-        console.log(response.status)
-        this.render()
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
-    })
-  }
+
 }
 
 const pages = {

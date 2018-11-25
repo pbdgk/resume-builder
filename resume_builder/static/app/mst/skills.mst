@@ -3,7 +3,7 @@
   <div class="form">
     <div class="field form-heading c12">
       <h4>Skill #{{priority}}</h4>
-      <span><i onclick="deleteSection(this, 'skills')" class="fa fa-times" aria-hidden="true"></i></span>
+      <span class="deleteBtn"><i class="fa fa-times" aria-hidden="true"></i></span>
     </div>
     <div class="field">
         <label class="form-label">Skill description</label>
