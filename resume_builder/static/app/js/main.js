@@ -525,49 +525,6 @@ function getTemplate(url) {
     });
 }
 
-// const gh = {
-//   label: 'Github',
-//   value: '',
-//   field_type: 'text',
-//   fa_image_class: "fab fa-github",
-//   field_name: 'github',
-//   priority: 0,
-//   validate: function(){
-//     return this.value
-//       ? this.value.match(GITHUB_RE_PATTERN)
-//       : true
-//   }
-// }
-
-// const SOCIALS = {
-//   'Github': gh,
-// }
-
-
-
-// let github = (target) => {
-//   const label = target.childNodes[3].dataset.label
-//   const social = SOCIALS[label]
-//   addSocial(social)
-// }
-
-
-// function addSocial(target) {
-//   const url = `http://127.0.0.1:8000/api/v1/socials/`;
-//   fetch(url, {
-//     method: "POST",
-//     headers: myHeaders,
-//     body: JSON.stringify(target)
-//   })
-//   .then(response => {
-//     return response.json()
-//   })
-//   .catch(e => {
-//     console.log(e.message)
-//   })
-// }
-
-
 class Page{
 
   getData(){
@@ -632,16 +589,20 @@ class SocialsPage extends Page {
   }
 
   async render(){
-    await super.render()
-    this.registerAddButtons()
-    this.addNewSocial()
-    this.onHideModal()
+    await super.render();
+    this.registerAddButtons();
+    this.addNewSocial();
+    this.onHideModal();
+    this.showDeleteButtonsOnHover();
+    this.registerDeleteButtons();
   }
 
   async rerender(){
     await super.render();
     this.registerAddButtons();
-    this.onHideModal()
+    this.onHideModal();
+    this.showDeleteButtonsOnHover();
+    this.registerDeleteButtons();
   }
 
   registerAddButtons(){
@@ -674,6 +635,53 @@ class SocialsPage extends Page {
     const modal = document.querySelector("#newSocialModal .modal")
     modal.dataset.group = group
     modal.style.display = 'block'
+  }
+
+  showDeleteButtonsOnHover(){
+    const container = document.querySelector("#content section")
+    const inputs = container.querySelectorAll('.new_form-field')
+    inputs.forEach(input => {
+      const btn = input.querySelector('.deleteBtn');
+      input.addEventListener('mouseenter', () => {
+        btn.style.visibility = 'visible'
+      })
+      input.addEventListener('mouseleave', () => {
+        btn.style.visibility = 'hidden'
+      })
+    })
+
+  }
+
+
+  registerDeleteButtons() {
+    const container = document.querySelector("#content section")
+    const btns = container.querySelectorAll('.deleteBtn')
+    btns.forEach(btn => {
+      btn.addEventListener('click', ({ target }) => {
+        this.deleteSocial(target.parentElement.previousElementSibling);
+      })
+    })
+  }
+
+  deleteSocial(target){
+    const url = `http://127.0.0.1:8000/api/v1/${this.cName}/`;
+    fetch(url, {
+      method: "delete",
+      headers: myHeaders,
+      body: JSON.stringify({"id": target.name})
+    })
+    .then(response => {
+      if (response.status !== 200){
+        console.log(response.status)
+        console.log(response.message)
+      } else {
+        console.log('deleted')
+        this.rerender()
+      }
+    })
+    .catch(e => {
+      console.log(e)
+    })
   }
 
   addNewSocial(){

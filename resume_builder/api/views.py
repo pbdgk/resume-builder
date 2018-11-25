@@ -262,13 +262,30 @@ class SocialRestView(APIView):
 
     def put(self, request, format=None):
         name, value = request.data.popitem()
-        social = Socials.objects.filter(user=request.user, field_name=name).first()
+        pk = int(name)
+        # social = Socials.objects.filter(user=request.user, field_name=name).first()
         data = { 'text': value }
+        social = Socials.objects.get(pk=pk)
         serialized = SocialSerializer(social, data=data, partial=True)
         if serialized.is_valid():
             serialized.save()
             return Response(serialized.data, status=status.HTTP_200_OK)
         return Response(serialized.errors, status=status.HTTP_404_NOT_FOUND)
+    
+  
+    def delete(self, request, format=None):
+        try:
+            print(request.data)
+            pk = int(request.data.get('id'))
+        except (ValueError, TypeError):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        item = Socials.objects.filter(pk=pk).first()
+        if item is not None:
+            serialized = SocialSerializer(item.delete())
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class DocRestView(APIView):

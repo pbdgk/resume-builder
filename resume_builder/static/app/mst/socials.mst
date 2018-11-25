@@ -1,4 +1,4 @@
-<section class="panel">
+<section class="panel" id="socials">
   <div class="forms-container">
     <div class="form" data-group=1>
         <div class="field form-heading c12">
@@ -14,7 +14,8 @@
                 <i class="{{ fa_image_class }}"></i>
             </span>
             <div class="new_form-field">
-            <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ field_name }}">
+            <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ pk }}">
+            <div class="deleteBtn"><i class="fas fa-times"></i></div>
             </div>
         </div>
         </div>
@@ -30,12 +31,13 @@
     <div class="field c12">
         <label class="form-label">{{ label }}</label>
         <div class="ifield">
-        <span class="date-select-icon">
-            <i class="{{ fa_image_class }}"></i>
-        </span>
-        <div class="new_form-field">
-            <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ field_name }}">
-        </div>
+            <span class="date-select-icon">
+                <i class="{{ fa_image_class }}"></i>
+            </span>
+            <div class="new_form-field">
+                <input class="form-field" value="{{ text }}" type="{{ field_type }}" name="{{ pk }}">
+                <div class="deleteBtn"><i class="fas fa-times"></i></div>
+            </div>
         </div>
     </div>
     {{ /secondGroup }}

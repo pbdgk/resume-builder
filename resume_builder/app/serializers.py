@@ -27,13 +27,16 @@ class GetSocialSerializer(serializers.ModelSerializer):
     secondGroup = serializers.SerializerMethodField()
 
     def get_firstGroup(self, obj):
-        return[{"label": social.label,
+        return [{"label": social.label,
         "text": social.text,
         "field_type": social.field_type,
         "priority": social.priority,
         "field_name": social.field_name,
         "fa_image_class": social.fa_image_class,
-        "group": social.group} for social in obj if social.group == 1]
+        "group": social.group,
+        "pk": social.pk,
+        
+        } for social in obj if social.group == 1]
 
     def get_secondGroup(self, obj):
         return[{"label": social.label,
@@ -42,11 +45,12 @@ class GetSocialSerializer(serializers.ModelSerializer):
         "priority": social.priority,
         "field_name": social.field_name,
         "fa_image_class": social.fa_image_class,
-        "group": social.group} for social in obj if social.group == 2]
+        "group": social.group,
+        "pk": social.pk,
+        } for social in obj if social.group == 2]
 
     class Meta:
         model = Socials
-        # fields = ('user', 'label', 'text', 'field_type', 'priority', 'field_name', 'fa_image_class')
         fields = ('firstGroup', 'secondGroup')
 
 
