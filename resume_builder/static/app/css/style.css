@@ -273,6 +273,7 @@ tr {
 
 .panel .forms-container {
   display: flex;
+  min-width: 100%;
 }
 
 .panel .forms-container .form {
@@ -320,6 +321,11 @@ tr {
 
 .ifield > .new_form-field {
   padding-left: 42px;
+  position: relative;
+}
+
+.ifield > .new_form-field > .form-field {
+  padding-right: 35px;  
 }
 
 .form-field {
@@ -523,12 +529,37 @@ tr {
 
 /*  ================= SOCIAL FIELDS ================== */
 
-.social-field {
-  float: left;
-  width: 127px;
-  margin: 5px;
-  background-color: #ccc;
+
+
+#socials .deleteBtn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 8px;
+  margin-right: 9px;
+  visibility: hidden;
+}
+
+#socials .deleteBtn i {
   cursor: pointer;
+}
+
+#newSocialModal ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#newSocialModal .social-field {
+  padding: 0px 8px;
+  display: flex;
+  align-items: center;
+  background-color: #ccc;
+  width: 134px;
+  margin: 5px 8px;
+}
+
+.social-label {
+  padding: 5px 15px;
 }
 
 
