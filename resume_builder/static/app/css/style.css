@@ -544,12 +544,12 @@ tr {
   cursor: pointer;
 }
 
-#newSocialModal ul {
+#socialModal ul {
   display: flex;
   flex-wrap: wrap;
 }
 
-#newSocialModal .social-field {
+#socialModal .social-field {
   padding: 0px 8px;
   display: flex;
   align-items: center;
