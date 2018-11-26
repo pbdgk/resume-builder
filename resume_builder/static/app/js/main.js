@@ -617,7 +617,7 @@ class SocialsPage extends Page {
   }
 
   hideOnOutClick(event) {
-    const modal = document.querySelector("#newSocialModal .modal")
+    const modal = document.querySelector("#socialModal .modal")
     if (event.target == modal) {
       this.hide(modal)
     }
@@ -632,7 +632,7 @@ class SocialsPage extends Page {
   }
 
   showModal(group){
-    const modal = document.querySelector("#newSocialModal .modal")
+    const modal = document.querySelector("#socialModal .modal")
     modal.dataset.group = group
     modal.style.display = 'block'
   }
@@ -685,7 +685,7 @@ class SocialsPage extends Page {
   }
 
   addNewSocial(){
-    const modal = document.querySelector("#newSocialModal .modal")
+    const modal = document.querySelector("#socialModal .modal")
     const socialButtons = modal.querySelectorAll('[data-social]')
     const self = this;
     socialButtons.forEach(btn => {
