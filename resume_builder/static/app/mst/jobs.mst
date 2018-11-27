@@ -1,5 +1,5 @@
 {{ #jobs }}
-<section class="panel tr" data-n="jobs" data-num="{{priority}}">
+<section class="panel tr" data-n="jobs" data-num="{{ pk }}">
   <div class="form">
     <div class="field form-heading c12">
       <h4>Company #{{priority}}</h4>

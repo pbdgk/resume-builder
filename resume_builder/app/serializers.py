@@ -63,19 +63,19 @@ class SocialSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('position', 'company', 'start', 'end', 'experience', 'priority')
+        fields = ('pk', 'position', 'company', 'start', 'end', 'experience', 'priority')
 
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ('name', 'start', 'end', 'description', 'priority')
+        fields = ('pk', 'name', 'start', 'end', 'description', 'priority')
 
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ('name', 'rating', 'priority')
+        fields = ('pk', 'name', 'rating', 'priority')
 
 
 class PhotoSerializer(serializers.ModelSerializer):
