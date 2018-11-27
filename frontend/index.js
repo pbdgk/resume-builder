@@ -11,23 +11,24 @@ import {
   SkillPage
 } from "./pages";
 
+const api = new Api()
+
 const pages = {
-  'profile/': MainPage,
-  'socials/': SocialsPage,
-  'summary/': SummaryPage,
-  'experience/': ExperiencePage,
-  'education/': EducationPage,
-  'skills/': SkillPage
+  'profile/': new MainPage(api),
+  'socials/': new SocialsPage(api),
+  'summary/': new SummaryPage(api),
+  'experience/': new ExperiencePage(api),
+  'education/': new EducationPage(api),
+  'skills/': new SkillPage(api)
 }
 
 const router = new Navigo('/app/', true);
 
-const api = new Api()
 
 
 Object.keys(pages).forEach(url => {
   router.on({[url]: function() {
-    let page = new pages[url](api);
+    let page = pages[url];
     page.show();
   }})
   .resolve()
