@@ -1,5 +1,5 @@
 {{ #schools }}
-<section class="panel tr" data-n="schools" data-num="{{priority}}">
+<section class="panel tr" data-n="schools" data-num="{{ pk }}">
   <div class="form">
     <div class="field form-heading c12">
       <h4>School #{{priority}}</h4>

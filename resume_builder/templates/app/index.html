@@ -1,18 +1,14 @@
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     {% load static %}
     <meta charset="utf-8">
     <link rel="stylesheet" href="{% static "app/css/normalize.css" %}">
+    <link rel="stylesheet" href="{% static "app/css/style.css" %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;subset=cyrillic" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css">
-    <link rel="stylesheet" href="{% static "app/css/style.css" %}">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.min.js"></script>
-    <script src="//unpkg.com/navigo@6"></script>
     <title>Portfolio Builder</title>
     </head>
   <body>
@@ -124,7 +120,9 @@
       </div>
     </div>
 
-    <script src="{% static "app/js/main.js" %}"></script>
+
+    {% render_bundle 'main' %}
+    <!-- <script src="{% static "app/js/index.js" %}"></script> -->
     <script src="{% static "app/js/animate.js" %}"></script>
   </body>
 </html>

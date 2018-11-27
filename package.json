@@ -4,15 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "./devServer --open --mode development",
+    "build": "webpack --mode production"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "eslint": "^5.9.0",
     "eslint-config-google": "^0.11.0",
-    "gulp": "^3.9.1",
-    "gulp-connect": "^5.6.1"
+    "webpack": "^4.26.1",
+    "webpack-bundle-tracker": "^0.4.2-beta",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "cropper": "^4.0.0",
+    "jquery": "^3.3.1",
+    "mustache": "^3.0.1",
+    "navigo": "^7.1.2"
+  }
 }

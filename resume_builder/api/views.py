@@ -82,8 +82,8 @@ class JobRestView(APIView):
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        priority = request.data.get('priority')
-        job = Job.objects.filter(user=request.user).filter(priority=priority).first()
+        pk = request.data.get('id')
+        job = Job.objects.filter(user=request.user).filter(pk=pk).first()
         serialized = JobSerializer(job.delete())
         return Response(serialized.data, status=status.HTTP_200_OK)
 
@@ -113,8 +113,8 @@ class SchoolRestView(APIView):
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        priority = request.data.get('priority')
-        school = School.objects.filter(user=request.user).filter(priority=priority).first()
+        pk = request.data.get('id')
+        school = School.objects.filter(user=request.user).filter(pk=pk).first()
         serialized = JobSerializer(school.delete())
         return Response(serialized.data, status=status.HTTP_200_OK)
 
@@ -143,8 +143,8 @@ class SkillRestView(APIView):
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        priority = request.data.get('priority')
-        skill = Skill.objects.filter(user=request.user).filter(priority=priority).first()
+        pk = request.data.get('id')
+        skill = Skill.objects.filter(user=request.user).filter(pk=pk).first()
         serialized = SkillSerializer(skill.delete())
         return Response(serialized.data, status=status.HTTP_200_OK)
 
